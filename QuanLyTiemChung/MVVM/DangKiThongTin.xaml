@@ -1,0 +1,91 @@
+﻿<Window x:Class="QuanLyTiemChung.MVVM.DangKiThongTin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuanLyTiemChung.MVVM"
+        mc:Ignorable="d"
+        Title="DangKiThongTin" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
+
+    <Grid Margin="10,10,10,10">
+        <!-- Define column and row definitions for layout -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Full Name -->
+        <TextBlock Text="Họ và tên:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="HoTenTextBox" Grid.Row="0" Grid.Column="1" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center"/>
+
+        <!-- Date of Birth -->
+        <TextBlock Text="Ngày sinh:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="NgaySinhTextBox" Grid.Row="0" Grid.Column="3" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center"/>
+
+        <!-- Gender (ComboBox) -->
+        <TextBlock Text="Giới tính:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox x:Name="GioiTinhComboBox" Grid.Row="1" Grid.Column="1" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center">
+            <ComboBoxItem Content="Nam"/>
+            <ComboBoxItem Content="Nữ"/>
+        </ComboBox>
+
+        <!-- Current Residence (Temporary) -->
+        <TextBlock Text="Nơi ở hiện tại (Tạm trú):" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox x:Name="CityComboBox" Grid.Row="1" Grid.Column="3" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center" SelectionChanged="CityComboBox_SelectionChanged">
+            
+        </ComboBox>
+
+        <!-- District/County -->
+        <TextBlock Text="Quận/Huyện:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox x:Name="DistrictComboBox" Grid.Row="2" Grid.Column="1" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center" SelectionChanged="DistrictComboBox_SelectionChanged">
+           
+        </ComboBox>
+
+        <!-- Commune/Ward -->
+        <TextBlock Text="Xã/Phường:" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox x:Name="WardComboBox" Grid.Row="2" Grid.Column="3" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center">
+            
+        </ComboBox>
+
+        <!-- Contact Phone -->
+        <TextBlock Text="Điện thoại liên hệ khi cần:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="DienThoaiTextBox" Grid.Row="3" Grid.Column="1" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center"/>
+
+        <!-- ID Number (CMT/CCCD) -->
+        <TextBlock Text="CMT/CCCD:" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="CCCDTextBox" Grid.Row="3" Grid.Column="3" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center"/>
+
+        <!-- Priority Group (ComboBox) -->
+        <TextBlock Text="Nhóm đối tượng ưu tiên:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox x:Name="NhomDoiTuongComboBox" Grid.Row="4" Grid.Column="1" Height="30" Width="200" Margin="5" VerticalContentAlignment="Center">
+            <ComboBoxItem Content="Không"/>
+            <ComboBoxItem Content="Nhóm 1"/>
+            <ComboBoxItem Content="Nhóm 2"/>
+            <ComboBoxItem Content="Nhóm 3"/>
+        </ComboBox>
+
+        <!-- Notes -->
+        <TextBlock Text="Ghi chú:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+        <TextBox x:Name="GhiChuTextBox" Grid.Row="5" Margin="25,10,40,127" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Grid.RowSpan="2" Grid.Column="1"/>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right" Margin="0,58,16,10">
+            <Button x:Name="LuuButton" Style="{StaticResource addButton}" Content="Lưu" Width="100" Height="30" Margin="5"/>
+            <Button x:Name="LuuDangKyButton" Style="{StaticResource addButton}" Content="Đăng Ký" Width="150" Height="30" Margin="5" Click="DangKi"/>
+            <Button x:Name="DongButton" Style="{StaticResource delButton}" Content="Đóng" Width="100" Height="30" Margin="5" Click="Dong"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,114 @@
+﻿<Window x:Class="QuanLyTiemChung.MVVM.FormDangKy"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:QuanLyTiemChung.MVVM"
+        mc:Ignorable="d"
+        Title="FormDangKy" Height="644" Width="500"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Text="TẠO PHIẾU ĐĂNG KÝ" FontSize="18" FontWeight="SemiBold" Foreground="White" Background="#2e9da6"
+                   Padding="10" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+
+        <!-- Form Section -->
+        <StackPanel Grid.Row="1" Margin="0,20,0,0">
+            <!-- Radio Buttons for Hình thức tiêm -->
+        </StackPanel>
+
+        <!-- Name and Gender Row -->
+        <Grid Grid.Row="2" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Họ và tên:" FontWeight="SemiBold"/>
+                <TextBox x:Name="HoTenTextBox" Width="200" Height="50" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Giới tính:" FontWeight="SemiBold"/>
+                <ComboBox x:Name="GioiTinhComboBox" Width="200" Height="50" IsEnabled="False">
+                    <ComboBoxItem Content="Nam"/>
+                    <ComboBoxItem Content="Nữ"/>
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <!-- Date of Birth and Age Row -->
+        <Grid Grid.Row="3" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Ngày sinh:" FontWeight="SemiBold"/>
+                <TextBox x:Name="NgaySinhTextBox" Width="200" Height="50" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Tuổi:" FontWeight="SemiBold"/>
+                <TextBox x:Name="TuoiTextBox" Width="200" Height="50" IsReadOnly="True"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Phone and Address Row -->
+        <Grid Grid.Row="4" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Điện thoại:" FontWeight="SemiBold"/>
+                <TextBox x:Name="DienThoaiTextBox" Width="200" Height="50" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Địa chỉ:" FontWeight="SemiBold"/>
+                <TextBox x:Name="DiaChiTextBox" Width="200" Height="50" IsReadOnly="True"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Order Number Row -->
+        <Grid Grid.Row="5" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Số thứ tự (*)" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Horizontal" Width="418">
+                    <TextBox x:Name="SoThuTuTextBox" Width="182" Height="39" IsReadOnly="True"/>
+                    <Button x:Name="ReloadButton" Width="30" Height="30" Margin="5,0,0,0" Background="#1E90FF">
+                        <Icon:PackIconMaterial Kind="Reload" Foreground="White"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Priority Checkbox and Notes -->
+        <StackPanel Grid.Row="5" Margin="10,68,0,0">
+            <CheckBox x:Name="DoTuongUuTienCheckBox" Content="Đối tượng ưu tiên" FontWeight="SemiBold"/>
+            <TextBlock Text="Ghi chú:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBox x:Name="GhiChuTextBox" Width="349" Height="83" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+        </StackPanel>
+
+        <!-- Buttons for Save and Cancel -->
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,198,0,0">
+            <Button x:Name="LuuButton" Style="{StaticResource addButton}" Content="Lưu và in" Width="150" Margin="5" Click="LuuButton_Click"/>
+            <Button x:Name="HuyButton" Style="{StaticResource delButton}" Content="Hủy" Width="100" Margin="5" Click="HuyDangKy"/>
+        </StackPanel>
+    </Grid>
+</Window>

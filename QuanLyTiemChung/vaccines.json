@@ -1,0 +1,29 @@
+[
+  {
+    "VaccineID": "VC01",
+    "VaccineName": "Pfizer",
+    "Dose": 1,
+    "Dosage": "0.2ml",
+    "Price": 200000,
+    "Manufacturer": "USA",
+    "InStock": 100
+  },
+  {
+    "VaccineID": "VC02",
+    "VaccineName": "Moderna",
+    "Dose": 2,
+    "Dosage": "0.5ml",
+    "Price": 250000,
+    "Manufacturer": "USA",
+    "InStock": 150
+  },
+  {
+    "VaccineID": "VC03",
+    "VaccineName": "AstraZeneca",
+    "Dose": 1,
+    "Dosage": "0.3ml",
+    "Price": 180000,
+    "Manufacturer": "UK",
+    "InStock": 120
+  }
+]

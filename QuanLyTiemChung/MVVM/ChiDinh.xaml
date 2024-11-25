@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="QuanLyTiemChung.MVVM.ChiDinh"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" d:DesignWidth="800" Background="White">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Dịch vụ tiêm chủng -->
+            <RowDefinition Height="*" />
+            <!-- Dịch vụ chỉ định khác và ghi chú -->
+            <RowDefinition Height="Auto" />
+            <!-- Nút lưu -->
+        </Grid.RowDefinitions>
+
+        <!-- Dịch vụ tiêm chủng -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <Border Background="#FFF9C4" Padding="10" CornerRadius="5">
+                <TextBlock Text="DỊCH VỤ TIÊM CHỦNG" FontWeight="Bold" Foreground="Black" />
+            </Border>
+
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Tên Vaccine -->
+                <TextBlock Text="Vắc xin (*)" VerticalAlignment="Center" Margin="5" />
+                <ComboBox x:Name="vaccineComboBox" Grid.Column="0" Margin="5" Height="30" 
+                           />
+
+                <!-- Mũi -->
+                <TextBlock Text="Mũi (*)" Grid.Column="1" VerticalAlignment="Center" Margin="5" />
+                <TextBox x:Name="doseTextBox" Grid.Column="1" Margin="5" Height="30" Text="1" />
+
+                <!-- Số lượng -->
+                <TextBlock Text="Số lượng" Grid.Column="2" VerticalAlignment="Center" Margin="5" />
+                <TextBox x:Name="quantityTextBox" Grid.Column="2" Margin="5" Height="30" Text="1" />
+
+                <!-- Liều lượng -->
+                <TextBlock Text="Liều lượng" Grid.Column="3" VerticalAlignment="Center" Margin="5" />
+                <ComboBox x:Name="quantityComboBox" Grid.Column="3" Margin="5" Height="30"
+                           />
+
+                <!-- Xóa -->
+                <Button x:Name="deleteButton" Grid.Column="4" Width="30" Height="30" Margin="5" Background="#eb4034">
+                    <Icon:PackIconMaterial Kind="TrashCan" Foreground="White" />
+                </Button>
+            </Grid>
+
+            <!-- Nút thêm -->
+            <Button x:Name="addVaccineButton" Style="{StaticResource addButton}" Content="+ THÊM" Width="100" Height="30" HorizontalAlignment="Left"
+                    Margin="0,10,0,0"  Foreground="White" />
+        </StackPanel>
+
+        <!-- Dịch vụ chỉ định khác -->
+        <StackPanel Grid.Row="1" Margin="0,10,0,10">
+            <Border Background="#FFF9C4" Padding="10" CornerRadius="5"/>
+
+            <!-- Nút thêm dịch vụ -->
+
+            <!-- Ghi chú -->
+            <TextBlock Text="Ghi Chú" Margin="0,10,0,5" FontWeight="Bold" />
+            <TextBox x:Name="notesTextBox" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+
+        <!-- Footer với các nút -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button x:Name="saveButton" Style="{StaticResource addButton}" Content="LƯU PHIẾU" Width="120" Height="40" Foreground="White" />
+
+            <Button x:Name="cancelButton" Content="HỦY PHIẾU" Width="120" Height="40" Style="{StaticResource delButton}" Foreground="White" />
+        </StackPanel>
+    </Grid>
+</UserControl>

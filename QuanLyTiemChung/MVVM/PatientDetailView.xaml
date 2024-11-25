@@ -1,0 +1,90 @@
+﻿<Window x:Class="QuanLyTiemChung.MVVM.PatientDetailView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="PatientDetailView" Height="500" Width="850"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
+    <Window.Resources>
+        <DropShadowEffect x:Key="DropShadowEffect" Color="#75B9BE" ShadowDepth="5" BlurRadius="10" Opacity="0.7"/>
+    </Window.Resources>
+    <Border Background="White" CornerRadius="10" Effect="{DynamicResource DropShadowEffect}" BorderBrush="#75B9BE" BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Background="#75B9BE" Grid.Row="0" Grid.ColumnSpan="4" Padding="15">
+                <TextBlock Text="Chi tiết bệnh nhân" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Full Name -->
+            <TextBlock Text="Họ và tên:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding Name}"/>
+
+            <!-- Date of Birth -->
+            <TextBlock Text="Ngày sinh:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="1" Grid.Column="3" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding DateOfBirth}"/>
+
+            <!-- Gender -->
+            <TextBlock Text="Giới tính:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding Gender}"/>
+
+            <!-- Full Address -->
+            <TextBlock Text="Địa chỉ:" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="3" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding Address}"/>
+
+            <!-- Contact Phone -->
+            <TextBlock Text="Điện thoại liên hệ khi cần:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding PhoneNumber}"/>
+
+            <!-- ID Number -->
+            <TextBlock Text="CMT/CCCD:" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="3" Grid.Column="3" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding IDNumber}"/>
+
+            <!-- Priority Group -->
+            <TextBlock Text="Nhóm đối tượng ưu tiên:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Height="30" Width="200" Margin="5" 
+                     VerticalContentAlignment="Center" IsReadOnly="True" 
+                     Text="{Binding PriorityGroup}"/>
+
+            <!-- Notes -->
+            <TextBlock Text="Ghi chú:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Height="100" Margin="5" 
+                     VerticalContentAlignment="Top" AcceptsReturn="True" IsReadOnly="True" 
+                     Text="{Binding Notes}"/>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right" Margin="0,58,16,10">
+                <Button Content="Đóng" Width="100" Height="30" Margin="5" Click="Dong"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
