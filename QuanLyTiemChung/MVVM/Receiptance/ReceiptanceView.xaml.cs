@@ -10,26 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTiemChung.MVVM.Vaccine
+namespace QuanLyTiemChung.MVVM
 {
-    
-    public partial class UpdateVaccine : Window
+    /// <summary>
+    /// Interaction logic for Receiptance.xaml
+    /// </summary>
+    public partial class ReceiptanceView : UserControl
     {
-        public UpdateVaccine()
+        public ReceiptanceView()
         {
             InitializeComponent();
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

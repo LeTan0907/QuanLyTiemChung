@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTiemChung.MVVM
+namespace QuanLyTiemChung.MVVM.Receiptance
 {
     /// <summary>
-    /// Interaction logic for Receiptance.xaml
+    /// Interaction logic for ReceipToday.xaml
     /// </summary>
-    public partial class Receiptance : UserControl
+    public partial class ReceipToday : UserControl
     {
-        public Receiptance()
+        public ReceipToday()
         {
             InitializeComponent();
         }

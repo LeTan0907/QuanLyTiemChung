@@ -91,9 +91,7 @@
                 <TextBlock Text="Số thứ tự (*)" FontWeight="SemiBold"/>
                 <StackPanel Orientation="Horizontal" Width="418">
                     <TextBox x:Name="SoThuTuTextBox" Width="182" Height="39" IsReadOnly="True"/>
-                    <Button x:Name="ReloadButton" Width="30" Height="30" Margin="5,0,0,0" Background="#1E90FF">
-                        <Icon:PackIconMaterial Kind="Reload" Foreground="White"/>
-                    </Button>
+                    
                 </StackPanel>
             </StackPanel>
         </Grid>

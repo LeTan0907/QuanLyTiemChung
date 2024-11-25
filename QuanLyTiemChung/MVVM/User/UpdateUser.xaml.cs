@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTiemChung.MVVM
+namespace QuanLyTiemChung.MVVM.User
 {
     /// <summary>
-    /// Interaction logic for TiepNhan.xaml
+    /// Interaction logic for UpdateUser.xaml
     /// </summary>
-    public partial class TiepNhan : Window
+    public partial class UpdateUser : UserControl
     {
-        public TiepNhan()
+        public UpdateUser()
         {
             InitializeComponent();
         }

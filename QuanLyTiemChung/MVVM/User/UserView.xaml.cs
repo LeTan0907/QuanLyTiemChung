@@ -10,26 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTiemChung.MVVM.Vaccine
+namespace QuanLyTiemChung.MVVM.User
 {
-    
-    public partial class UpdateVaccine : Window
+    /// <summary>
+    /// Interaction logic for UserView.xaml
+    /// </summary>
+    public partial class UserView : UserControl
     {
-        public UpdateVaccine()
+        public UserView()
         {
             InitializeComponent();
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            MainContent.Content= new UserList();
         }
     }
 }

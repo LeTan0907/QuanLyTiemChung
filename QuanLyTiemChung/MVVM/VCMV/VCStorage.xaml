@@ -115,7 +115,7 @@
                                 <Button Style="{StaticResource gridEditButton}" Command="{Binding EditCommand}">
                                     <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
-                                <Button Margin="5,0,0,0" Style="{StaticResource gridRemoveButton}" Click="DeleteButton_Click" Command="{Binding DeleteCommand}">
+                                <Button Margin="5,0,0,0" Style="{StaticResource gridRemoveButton}"  Command="{Binding DeleteCommand}">
                                     <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
                             </StackPanel>

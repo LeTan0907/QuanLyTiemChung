@@ -95,7 +95,7 @@ namespace QuanLyTiemChung.MVVM
         {
             try
             {
-                string jsonFilePath = "D://QuanLyTiemChung//QuanLyTiemChung//vietnam-location.json";
+                string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vietnam-location.json");
                 if (!File.Exists(jsonFilePath))
                 {
                     MessageBox.Show("Không tìm thấy tệp dữ liệu địa phương!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);

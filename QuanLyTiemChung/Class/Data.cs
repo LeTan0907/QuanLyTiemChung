@@ -242,36 +242,62 @@ public class DeletedOrder
     [FirestoreProperty]
     public string DeletedBy { get; set; } // Add user information if applicable
 }
-[FirestoreData] 
+[FirestoreData]
 public class MedicalRecord
 {
-    [FirestoreProperty] 
+    [FirestoreProperty]
     public string PatientID { get; set; }
 
-    [FirestoreProperty] 
+    [FirestoreProperty]
     public string Name { get; set; }
 
-    [FirestoreProperty]  
+    [FirestoreProperty]
     public string Gender { get; set; }
 
-    [FirestoreProperty] 
+    [FirestoreProperty]
     public string Address { get; set; }
 
-    [FirestoreProperty]  
+    [FirestoreProperty]
     public string DoctorID { get; set; }
 
-    [FirestoreProperty]  
+    [FirestoreProperty]
     public string DoctorName { get; set; }
 
-    [FirestoreProperty] 
+    [FirestoreProperty]
     public List<String> VacineID { get; set; }
 
-    [FirestoreProperty] 
+    [FirestoreProperty]
     public int TotalPrice { get; set; }
 
-    [FirestoreProperty] 
+    [FirestoreProperty]
     public string InvoiceStatus { get; set; }
 
     [FirestoreProperty]
     public Timestamp CreatedAt { get; set; }
+}
+[FirestoreData]
+public class VaccineDetail
+{
+    [FirestoreProperty]
+    public string VaccineName { get; set; }
+    [FirestoreProperty]
+    public string VaccineID { get; set; }
+
+    [FirestoreProperty]
+    public int Quantity { get; set; }
+
+    [FirestoreProperty]
+    public decimal Price { get; set; }
+
+    [FirestoreProperty]
+    public string BatchNumber { get; set; }
+
+    [FirestoreProperty]
+    public string ExpiryDate { get; set; }
+
+    [FirestoreProperty]
+    public string Temperature { get; set; }
+
+    [FirestoreProperty]
+    public string Manufacturer { get; set; }
 }
