@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Firebase.Auth;
+using Google.Cloud.Firestore;
+using QuanLyTiemChung.MVVM.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +24,12 @@ namespace QuanLyTiemChung.MVVM.User
     /// </summary>
     public partial class UserList : UserControl
     {
+        public ObservableCollection<Users> Users { get; set; }
         public UserList()
         {
             InitializeComponent();
+            DataContext = new UserViewModel();
         }
+       
     }
 }

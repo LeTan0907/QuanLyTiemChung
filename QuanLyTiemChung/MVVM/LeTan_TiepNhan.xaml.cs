@@ -86,6 +86,7 @@ namespace QuanLyTiemChung.MVVM
         {
             var dangKiWindow = new DangKiThongTin();  // Create an instance of the DangKiThongTin window
             dangKiWindow.ShowDialog();  // Show the window
+            MainContent.Content = new PatientView();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

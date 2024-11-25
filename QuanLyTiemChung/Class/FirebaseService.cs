@@ -14,7 +14,6 @@ namespace QuanLyTiemChung.Class
 
         public FirebaseService()
         {
-            // Initialize FirebaseClient with your Firebase Database URL
             _firebaseClient = new FirebaseClient("https://quanlytiemchung-f225a.firebaseio.com");
         }
 

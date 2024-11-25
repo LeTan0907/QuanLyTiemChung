@@ -38,6 +38,9 @@
                 <Button x:Name="Danhsach" Style="{StaticResource tabButton}" Content="Danh sách nhân viên" BorderBrush="#2e9da6" Command="{Binding ShowListCommand}" />
             </StackPanel>
 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="445,1,0,3" Grid.Row="2" Grid.Column="1"/>
+
+
             <!-- Content Control -->
             <ContentControl x:Name="MainContent" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,10,30"
                         Content="{Binding CurrentViewModel}">
@@ -47,6 +50,12 @@
                     </DataTemplate>
                 </ContentControl.ContentTemplate>
             </ContentControl>
+            <Button Style="{StaticResource addButton}" VerticalAlignment="Top" Margin="0,96,27,0" Click="Button_Click" Grid.Column="1" Grid.RowSpan="3">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0,1,8,0" Width="11" Height="11"/>
+                    <TextBlock Text="Thêm đối tượng"/>
+                </StackPanel>
+            </Button>
         </Grid>
     </Grid>
 </UserControl>

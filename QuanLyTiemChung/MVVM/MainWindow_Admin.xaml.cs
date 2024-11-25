@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using QuanLyTiemChung.MVVM;
 using MaterialDesignThemes.Wpf;
+using QuanLyTiemChung.MVVM.User;
 
 namespace QuanLyTiemChung
 {
@@ -86,7 +87,12 @@ namespace QuanLyTiemChung
             }
         }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = new UserView();
+        }
+
         //UI//
-      
+
     }
 }

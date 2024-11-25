@@ -25,5 +25,11 @@ namespace QuanLyTiemChung.MVVM.User
             InitializeComponent();
             MainContent.Content= new UserList();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var adduser = new AddUser();
+            adduser.ShowDialog();
+        }
     }
 }

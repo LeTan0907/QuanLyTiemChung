@@ -83,6 +83,12 @@
                                     <TextBlock Text="Kho Vaccine"/>
                                 </StackPanel>
                             </Button>
+                            <Button Style="{StaticResource menuButton}" Click="Button_Click_1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Human" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Nhân viên"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
 
                         <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="15 0 15 20" Click="Logout">

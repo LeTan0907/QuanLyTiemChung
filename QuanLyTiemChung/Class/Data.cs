@@ -107,20 +107,31 @@ public class Disease
     public ICollection<Vaccines> Vaccines { get; set; }
 }
 
-public class Doctor
+
+[FirestoreData]
+public class Users
 {
-    public int DoctorID { get; set; }
-    public DateTime DOB { get; set; }
-    public string Gender { get; set; }
-    public string PhoneNumber { get; set; }
+    [FirestoreProperty]
+    public string UserID { get; set; } // Doctor's unique ID
 
-    // Foreign key
-    public string Username { get; set; }
+    [FirestoreProperty]
+    public string Name { get; set; } // Doctor's unique ID
+    [FirestoreProperty]
+    public Timestamp DOB { get; set; } // Firestore-compatible date of birth
 
-    // Navigation properties
-    public Account Account { get; set; }
-    public ICollection<Service> Services { get; set; }
+    [FirestoreProperty]
+    public string Gender { get; set; } // Gender of the user
+
+    [FirestoreProperty]
+    public string PhoneNumber { get; set; } // Contact number
+    [FirestoreProperty]
+    public string Address { get; set; } // Contact number
+    [FirestoreProperty]
+    public string Role { get; set; } // Contact number
+    [FirestoreProperty]
+    public string Username { get; set; } // Foreign key or username
 }
+
 
 [FirestoreData]
 public class Patient
@@ -195,21 +206,18 @@ public class Service
     public string Diagnosis { get; set; }
 
     // Navigation properties
-    public Doctor Doctor { get; set; }
 }
-
+[FirestoreData]
 public class Account
 {
+    [FirestoreProperty]
     public string Username { get; set; }
+    [FirestoreProperty]
     public string Password { get; set; }
+    [FirestoreProperty]
     public bool Enable { get; set; }
-
-    // Foreign key
-    public int RoleID { get; set; }
-
-    // Navigation properties
-    public Role Role { get; set; }
-    public ICollection<Doctor> Doctors { get; set; }
+    [FirestoreProperty]
+    public string Role { get; set; }
 }
 
 public class Role
