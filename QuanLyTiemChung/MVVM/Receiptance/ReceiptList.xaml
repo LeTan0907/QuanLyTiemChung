@@ -28,17 +28,13 @@
                       AutoGenerateColumns="False"
                       Background="White"
                       Margin="0,10,10,0"
-                      ItemsSource="{Binding FilteredPatients}">
+                                ItemsSource="{Binding FilteredPatients}">
+           
+
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="Auto" ElementStyle="{StaticResource CheckBoxStyle1}">
-                        <DataGridCheckBoxColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <CheckBox Style="{StaticResource CheckBoxStyle1}"/>
-                            </DataTemplate>
-                        </DataGridCheckBoxColumn.HeaderTemplate>
-                    </DataGridCheckBoxColumn>
+                   
                     <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding Number}"/>
-                    <DataGridTextColumn Header="CCCD" Binding="{Binding IDNumber}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Mã " Binding="{Binding IDNumber}" IsReadOnly="True" Width="*"/>
                     <DataGridTemplateColumn Header="Họ tên" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -51,8 +47,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" IsReadOnly="True" Width="*"/>
-                    <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Tổng giá" Binding="{Binding TotalPrice}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding InvoiceStatus}" IsReadOnly="True" Width="*"/>
                     <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

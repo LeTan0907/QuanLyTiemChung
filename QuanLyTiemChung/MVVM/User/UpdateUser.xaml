@@ -4,11 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuanLyTiemChung.MVVM.User"
-             mc:Ignorable="d" d:DesignWidth="800" Background="White" Height="517">
+             mc:Ignorable="d" d:DesignWidth="800" Background="White" Height="517"
+         WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True">
     <Grid Margin="20">
         <!-- Header -->
-        <Border Background="#007ACC" Height="60" VerticalAlignment="Top" CornerRadius="10">
-            <TextBlock Text="Đăng Ký Thông Tin Người Dùng" Foreground="White" 
+        <Border Background="#75B9BE" Height="60" VerticalAlignment="Top" CornerRadius="10">
+            <TextBlock Text="Cập Nhật Thông Tin Người Dùng" Foreground="White" 
                    FontSize="20" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Border>
 
@@ -34,7 +35,7 @@
 
             <!-- Full Name -->
             <TextBlock Text="Họ và Tên:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
-            <TextBox x:Name="UsernameTextBox" Grid.Row="0" Grid.Column="1" Height="30" Margin="5" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="NameTextBox" Grid.Row="0" Grid.Column="1" Height="30" Margin="5" VerticalContentAlignment="Center"/>
 
             <!-- Date of Birth -->
             <TextBlock Text="Ngày Sinh:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
@@ -83,8 +84,8 @@
 
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="10">
-                <Button x:Name="SaveButton" Content="Lưu" Width="100" Height="30" Margin="10" Click="AddUserButton_Click"/>
-                <Button x:Name="CancelButton" Content="Hủy" Width="100" Height="30" Margin="10" Click="CancelButton_Click"/>
+                <Button x:Name="SaveButton" Style="{StaticResource addButton}" Content="Lưu" Width="100" Height="30" Margin="10" Click="SaveButton_Click" />
+                <Button x:Name="CancelButton" Style="{StaticResource delButton}" Content="Hủy" Width="100" Height="30" Margin="10" Click="CancelButton_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

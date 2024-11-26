@@ -253,6 +253,9 @@ public class DeletedOrder
 [FirestoreData]
 public class MedicalRecord
 {
+    
+    [FirestoreProperty]
+    public string RecordsID { get; set; }
     [FirestoreProperty]
     public string PatientID { get; set; }
 
@@ -272,7 +275,7 @@ public class MedicalRecord
     public string DoctorName { get; set; }
 
     [FirestoreProperty]
-    public List<String> VaccineList { get; set; }
+    public Dictionary<string, int> VaccineList { get; set; }
 
     [FirestoreProperty]
     public int TotalPrice { get; set; }

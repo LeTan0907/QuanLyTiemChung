@@ -92,6 +92,11 @@ namespace QuanLyTiemChung
             MainContentControl.Content = new UserView();
         }
 
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+           MainContentControl.Content= new ReceiptanceView();
+        }
+
         //UI//
 
     }

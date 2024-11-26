@@ -70,10 +70,10 @@
                                 </StackPanel>
                             </Button>
 
-                            <Button Style="{StaticResource menuButton}">
+                            <Button Style="{StaticResource menuButton}" Click="Button_Click_2">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="NewspaperVariant" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Báo cáo"/>
+                                    <TextBlock Text="Thanh toán"/>
                                 </StackPanel>
                             </Button>
 

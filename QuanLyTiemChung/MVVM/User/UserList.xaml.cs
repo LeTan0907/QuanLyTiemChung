@@ -53,8 +53,26 @@ namespace QuanLyTiemChung.MVVM.User
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            UpdateUser updateUser = new UpdateUser();
-            updateUser.ShowDialog();
+            // Get the selected user
+            var selectedUser = patientsDataGrid.SelectedItem as Users; // Adjust this based on your user model
+
+            if (selectedUser != null)
+            {
+                // Create and open the UpdateUser window
+                var updateWindow = new UpdateUser(selectedUser);
+
+                // Pass the selected user to the UpdateUser window (You can either use a constructor or a method for this)
+                
+
+                // Show the UpdateUser window
+                updateWindow.ShowDialog();
+                LoadUsersAsync();
+            }
+            else
+            {
+                MessageBox.Show("Please select a user to edit.");
+            }
         }
+
     }
 }

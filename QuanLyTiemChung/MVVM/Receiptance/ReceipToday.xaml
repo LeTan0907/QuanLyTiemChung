@@ -27,9 +27,7 @@
                 <!-- Number Column -->
                 <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="50" Binding="{Binding Number}"/>
 
-                <!-- Vaccination Code Column -->
-                <DataGridTextColumn Header="" Binding="{Binding IDNumber}" IsReadOnly="True" Width="*" />
-
+            
                 <!-- Name Column with Icon -->
                 <DataGridTemplateColumn Header="Họ tên" IsReadOnly="True" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -38,6 +36,7 @@
                                 <Border Width="25" Height="25" CornerRadius="50" Margin="0,0,10,0" Background="{Binding BgColor}">
                                     <TextBlock Text="{Binding Character}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,1"/>
                                 </Border>
+                                
                                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </DataTemplate>
@@ -49,6 +48,8 @@
                 <DataGridTextColumn Header="SĐT" Binding="{Binding PhoneNumber}" IsReadOnly="True" Width="100" />
                 <!-- Address Column -->
                 <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" IsReadOnly="True" Width="*" />
+                <!-- Vaccination Code Column -->
+                <DataGridTextColumn Header="" Binding="{Binding IDNumber}" IsReadOnly="True" Width="*" />
 
                 <!-- Interaction Column with View, Edit, and Delete Buttons -->
                 <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="150">

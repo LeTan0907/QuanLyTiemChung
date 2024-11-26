@@ -1,28 +1,157 @@
-﻿using System;
+﻿using Google.Cloud.Firestore;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QuanLyTiemChung.MVVM.Receiptance
 {
-    /// <summary>
-    /// Interaction logic for ReceiptList.xaml
-    /// </summary>
     public partial class ReceiptList : UserControl
     {
+        // ObservableCollection to hold and update the data displayed in the DataGrid
+        public ObservableCollection<MedicalRecord> FilteredPatients { get; set; }
+
+        // Full collection of medical records loaded from Firestore
+        private ObservableCollection<MedicalRecord> AllMedicalRecords { get; set; }
+
+        private FirestoreDb _firestoreDb;
+
         public ReceiptList()
         {
             InitializeComponent();
+
+            // Initialize Firestore database client
+            _firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a"); // Replace with your actual Firestore project ID
+
+            // Initialize collections
+            AllMedicalRecords = new ObservableCollection<MedicalRecord>();
+            FilteredPatients = new ObservableCollection<MedicalRecord>();
+            DataContext = this;
+
+            // Set today's date in the DatePicker and filter records accordingly
+            DatePicker.SelectedDate = DateTime.Today;
+            LoadMedicalRecordsAsync(); // Load records on initialization
+        }
+
+        private async Task LoadMedicalRecordsAsync()
+        {
+            try
+            {
+                // Fetching the MedicalRecords collection from Firestore
+                var medicalRecordsCollection = _firestoreDb.Collection("MedicalRecords");
+                var snapshot = await medicalRecordsCollection.GetSnapshotAsync();
+
+                // Clear any existing records from the ObservableCollection
+                AllMedicalRecords.Clear();
+
+                // Iterate through the documents returned by the query
+                foreach (var document in snapshot.Documents)
+                {
+                    // Convert Firestore document to MedicalRecord
+                    var medicalRecord = document.ConvertTo<MedicalRecord>();
+
+                    // Safe conversion of TotalPrice to integer (if it's a string in Firestore)
+                    if (medicalRecord.TotalPrice != null)
+                    {
+                        int totalPrice;
+                        if (!int.TryParse(medicalRecord.TotalPrice.ToString(), out totalPrice))
+                        {
+                            // Handle invalid data (could log or set a default value)
+                            totalPrice = 0; // Set to a default value or log an error
+                        }
+                        medicalRecord.TotalPrice = totalPrice;
+                    }
+
+                    // Check if the VaccineList is not null or empty
+                    if (medicalRecord.VaccineList == null)
+                    {
+                        medicalRecord.VaccineList = new Dictionary<string, int>();
+                    }
+                    else
+                    {
+                        // Ensure the values in VaccineList are integers
+                        foreach (var key in medicalRecord.VaccineList.Keys.ToList())
+                        {
+                            int vaccineCount;
+                            if (!int.TryParse(medicalRecord.VaccineList[key].ToString(), out vaccineCount))
+                            {
+                                // Handle invalid data (could log or set a default value)
+                                medicalRecord.VaccineList[key] = 0; // Default value
+                            }
+                        }
+                    }
+
+                    // Add the medical record to the AllMedicalRecords collection
+                    AllMedicalRecords.Add(medicalRecord);
+                }
+
+                // Log the loaded data for debugging
+                string log = "Loaded Medical Records:\n";
+                foreach (var record in AllMedicalRecords)
+                {
+                    log += $"RecordsID: {record.RecordsID}, PatientID: {record.PatientID}, TotalPrice: {record.TotalPrice}\n";
+                }
+                Console.WriteLine(log);
+
+                // After loading all records, apply the filter
+                FilterRecords();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching medical records: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+        private void FilterRecords()
+        {
+            try
+            {
+                DateTime? selectedDate = DatePicker.SelectedDate;
+                string nameFilter = SearchTextBox.Text?.Trim().ToLower();
+
+                if (selectedDate == null)
+                {
+                    // If no date is selected, clear the FilteredPatients
+                    FilteredPatients.Clear();
+                    return;
+                }
+
+                // Filter records by the selected date
+                var filtered = AllMedicalRecords.Where(record =>
+                    record.CreatedAt.ToDateTime().Date == selectedDate.Value.Date);
+
+                if (!string.IsNullOrEmpty(nameFilter))
+                {
+                    // Additional filter by name if provided
+                    filtered = filtered.Where(record =>
+                        record.Name.ToLower().Contains(nameFilter));
+                }
+
+                // Clear and add filtered records to FilteredPatients
+                FilteredPatients.Clear();
+                foreach (var record in filtered)
+                {
+                    FilteredPatients.Add(record);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error filtering records: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterRecords(); // Filter the records whenever the selected date changes
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FilterRecords(); // Filter the records whenever the search text changes
         }
     }
 }

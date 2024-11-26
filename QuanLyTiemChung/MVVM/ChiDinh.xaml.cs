@@ -105,31 +105,43 @@ namespace QuanLyTiemChung.MVVM
                     MessageBox.Show("Vui lòng chọn vaccine!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                // Get quantity value
+
+                // Lấy số lượng (quantity) từ TextBox
                 int quantity = string.IsNullOrWhiteSpace(quantityTextBox.Text) || !int.TryParse(quantityTextBox.Text, out quantity) ? 1 : quantity;
 
-                // Calculate the price of the selected vaccine (assuming one vaccine per dose)
+                // Tính giá tổng cộng của vaccine
                 int totalVaccinePrice = quantity * selectedVaccine.Price;
 
-                // Prepare the medical record info to be saved
+                // Tạo RecordsID mới theo ngày tháng + số thứ tự
+                string newRecordsID = await GenerateRecordsIDAsync();
+
+                // Tạo Dictionary cho VaccineList với mã vaccine và số lượng
+                var vaccineMap = new Dictionary<string, int>
+        {
+            { selectedVaccine.VaccineID, quantity }
+        };
+
+                // Chuẩn bị thông tin MedicalRecord để lưu
                 var medicalRecord = new MedicalRecord
                 {
+                    RecordsID = newRecordsID, // Sử dụng ID đã tạo
                     PatientID = _orderPatientInfo?.PatientID ?? "Unknown",
                     Name = _orderPatientInfo?.Name ?? "Unknown",
                     Gender = _orderPatientInfo?.Gender ?? "Unknown",
                     Address = _orderPatientInfo?.Address ?? "Unknown",
-                    TotalPrice = totalVaccinePrice, // Calculating the total price here
+                    TotalPrice = totalVaccinePrice,
                     InvoiceStatus = "waiting",
                     CreatedAt = Timestamp.GetCurrentTimestamp(),
-                    VaccineList = new List<string> { selectedVaccine.VaccineID } // Add the selected vaccine ID to the list
+                    VaccineList = vaccineMap // Lưu Map vaccine với số lượng
                 };
 
+                // Lưu MedicalRecord vào Firestore
                 var firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
 
                 try
                 {
-                    var medicalRecordRef = firestoreDb.Collection("MedicalRecords").Document(_orderPatientInfo.PatientID);
-                    await medicalRecordRef.SetAsync(medicalRecord); // Save or overwrite the document
+                    var medicalRecordRef = firestoreDb.Collection("MedicalRecords").Document(newRecordsID);
+                    await medicalRecordRef.SetAsync(medicalRecord);
                     Console.WriteLine("Medical Record saved successfully.");
                 }
                 catch (Exception ex)
@@ -138,7 +150,7 @@ namespace QuanLyTiemChung.MVVM
                     return;
                 }
 
-                // Update the OrderPatientInfo status to "done"
+                // Cập nhật trạng thái đơn hàng
                 var orderPatientInfoRef = firestoreDb.Collection("orderpatientinfo").Document(_orderPatientInfo.OrderID);
                 try
                 {
@@ -154,10 +166,10 @@ namespace QuanLyTiemChung.MVVM
                     return;
                 }
 
-                // Show success message
+                // Hiển thị thông báo thành công
                 MessageBox.Show("Thông tin chỉ định đã được lưu và đơn đã hoàn thành!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Navigate to another page
+                // Điều hướng đến trang khác
                 _parentControl.NavigateToDanhSachKham();
             }
             catch (Exception ex)
@@ -166,6 +178,36 @@ namespace QuanLyTiemChung.MVVM
             }
         }
 
+
+        private async Task<string> GenerateRecordsIDAsync()
+        {
+            try
+            {
+                // Lấy ngày hiện tại (yyyyMMdd)
+                string currentDate = DateTime.Now.ToString("yyyyMMdd");
+
+                // Truy vấn Firestore để lấy tất cả các MedicalRecord trong ngày hôm nay
+                var firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
+                var medicalRecordsRef = firestoreDb.Collection("MedicalRecords");
+                var snapshot = await medicalRecordsRef.WhereGreaterThanOrEqualTo("RecordsID", currentDate).GetSnapshotAsync();
+
+                // Đếm số bản ghi hiện có trong ngày
+                int recordCount = snapshot.Documents.Count;
+
+                // Tạo số thứ tự (STT) tiếp theo (STT bắt đầu từ 001)
+                string recordNumber = (recordCount + 1).ToString("D3");  // Format "001", "002", ...
+
+                // Tạo ID theo dạng: yyyyMMdd-STT (ví dụ: 20241127-001)
+                string newRecordsID = $"{currentDate}-{recordNumber}";
+
+                return newRecordsID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tạo RecordsID: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
         private void AddVaccineRow_Click(object sender, RoutedEventArgs e)
         {
             // Tạo một Grid mới để chứa các điều khiển cho vaccine mới

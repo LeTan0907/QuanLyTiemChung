@@ -1,5 +1,4 @@
-﻿using QuanLyTiemChung.MVVM.Receiptance;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTiemChung.MVVM
+namespace QuanLyTiemChung.MVVM.Receiptance
 {
     /// <summary>
-    /// Interaction logic for Receiptance.xaml
+    /// Interaction logic for PaymentWindow.xaml
     /// </summary>
-    public partial class ReceiptanceView : UserControl
+    public partial class PaymentWindow : Window
     {
-        public ReceiptanceView()
+        public PaymentWindow()
         {
             InitializeComponent();
-            MainContent.Content = new ReceiptList();
         }
     }
 }

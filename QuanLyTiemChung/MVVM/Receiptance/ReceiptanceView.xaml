@@ -50,7 +50,6 @@
             <!-- Tab Buttons -->
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,2,-18,16" Grid.Column="1">
                 <Button x:Name="Danhsach" Style="{StaticResource tabButton}" Content="Danh sách" BorderBrush="#2e9da6" Command="{Binding ShowListCommand}" />
-                <Button x:Name="DaDangKi" Style="{StaticResource tabButton}" Content="Đã thanh toán" Width="108" Command="{Binding ShowRegisteredCommand}" />
             </StackPanel>
 
             <!-- Content Control -->
