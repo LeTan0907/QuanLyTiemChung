@@ -272,7 +272,7 @@ public class MedicalRecord
     public string DoctorName { get; set; }
 
     [FirestoreProperty]
-    public List<String> VacineID { get; set; }
+    public List<String> VaccineList { get; set; }
 
     [FirestoreProperty]
     public int TotalPrice { get; set; }

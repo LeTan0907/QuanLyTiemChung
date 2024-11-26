@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <!-- Dịch vụ tiêm chủng -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+        <StackPanel x:Name="vaccinesStackPanel" Grid.Row="0" Margin="0,0,0,10">
             <Border Background="#FFF9C4" Padding="10" CornerRadius="5">
                 <TextBlock Text="DỊCH VỤ TIÊM CHỦNG" FontWeight="Bold" Foreground="Black" />
             </Border>
@@ -32,39 +32,46 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Tên Vaccine -->
-                <TextBlock Text="Vắc xin (*)" VerticalAlignment="Center" Margin="5" />
-                <ComboBox x:Name="vaccineComboBox" Grid.Column="0" Margin="5" Height="30" 
-                           />
-
-                <!-- Mũi -->
-                <TextBlock Text="Mũi (*)" Grid.Column="1" VerticalAlignment="Center" Margin="5" />
-                <TextBox x:Name="doseTextBox" Grid.Column="1" Margin="5" Height="30" Text="1" />
-
-                <!-- Số lượng -->
-                <TextBlock Text="Số lượng" Grid.Column="2" VerticalAlignment="Center" Margin="5" />
-                <TextBox x:Name="quantityTextBox" Grid.Column="2" Margin="5" Height="30" Text="1" />
+                <StackPanel Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <TextBlock Text="Vắc xin (*)" VerticalAlignment="Center" Margin="5" />
+                    <ComboBox x:Name="vaccineComboBox" Height="30" SelectedValuePath="VaccineName" DisplayMemberPath="VaccineName"
+                              SelectionChanged="OnVaccineSelected" Width="139" />
+                </StackPanel>
 
                 <!-- Liều lượng -->
-                <TextBlock Text="Liều lượng" Grid.Column="3" VerticalAlignment="Center" Margin="5" />
-                <ComboBox x:Name="quantityComboBox" Grid.Column="3" Margin="5" Height="30"
-                           />
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <TextBlock Text="Liều lượng (*)" VerticalAlignment="Center" Margin="5" />
+                    <TextBox x:Name="doseTextBox" Height="30" Text="" IsReadOnly="True" />
+                </StackPanel>
+
+                <!-- Số lượng -->
+                <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <TextBlock Text="Số lượng" VerticalAlignment="Center" Margin="5" />
+                    <TextBox x:Name="quantityTextBox" Height="30" Text="" />
+                </StackPanel>
+
+                <!-- Tình trạng -->
+                <StackPanel Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <TextBlock Text="Tình trạng" VerticalAlignment="Center" Margin="5" />
+                    <TextBlock x:Name="stockStatusTextBlock" Height="30" FontWeight="Bold" Foreground="Green" />
+                </StackPanel>
 
                 <!-- Xóa -->
-                <Button x:Name="deleteButton" Grid.Column="4" Width="30" Height="30" Margin="5" Background="#eb4034">
+                <Button Grid.Column="4" Width="30" Height="30" Margin="5" Background="#eb4034">
                     <Icon:PackIconMaterial Kind="TrashCan" Foreground="White" />
                 </Button>
             </Grid>
+            <Button x:Name="addVaccineButton_Copy" Style="{StaticResource addButton}" Content="+ THÊM" Width="100" Height="30"
+                Click="AddVaccineRow_Click" Foreground="White" RenderTransformOrigin="6.488,1.443" />
 
             <!-- Nút thêm -->
-            <Button x:Name="addVaccineButton" Style="{StaticResource addButton}" Content="+ THÊM" Width="100" Height="30" HorizontalAlignment="Left"
-                    Margin="0,10,0,0"  Foreground="White" />
         </StackPanel>
 
         <!-- Dịch vụ chỉ định khác -->
         <StackPanel Grid.Row="1" Margin="0,10,0,10">
-            <Border Background="#FFF9C4" Padding="10" CornerRadius="5"/>
 
-            <!-- Nút thêm dịch vụ -->
+            <!-- Ghi chú -->
+            <Border Background="#FFF9C4" Padding="10" CornerRadius="5"/>
 
             <!-- Ghi chú -->
             <TextBlock Text="Ghi Chú" Margin="0,10,0,5" FontWeight="Bold" />
@@ -72,9 +79,8 @@
         </StackPanel>
 
         <!-- Footer với các nút -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" >
-            <Button x:Name="saveButton" Style="{StaticResource addButton}" Content="LƯU PHIẾU" Width="120" Height="40" Foreground="White" />
-
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="saveButton" Style="{StaticResource addButton}" Content="LƯU PHIẾU" Width="120" Height="40" Foreground="White" Click="AssignButton_Click"/>
             <Button x:Name="cancelButton" Content="HỦY PHIẾU" Width="120" Height="40" Style="{StaticResource delButton}" Foreground="White" />
         </StackPanel>
     </Grid>

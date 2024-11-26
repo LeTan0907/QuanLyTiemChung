@@ -1,8 +1,10 @@
 ﻿using Google.Cloud.Firestore;
+using Google.Cloud.Firestore.V1;
 using MahApps.Metro.IconPacks;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,14 +15,15 @@ namespace QuanLyTiemChung.MVVM
 {
     public partial class ChiDinh : UserControl
     {
-        private OrderPatientInfo _orderPatientInfo; // Store OrderPatientInfo
-        private TiepNhanTiem _parentControl; // Reference to parent control
-
+        private OrderPatientInfo _orderPatientInfo; 
+        private TiepNhanTiem _parentControl;
+        private readonly FirestoreDb _firestoreDb;
+        public ObservableCollection<Vaccines> vaccinesList { get; set; } = new ObservableCollection<Vaccines>();
         // Constructor to initialize with OrderPatientInfo and parent control
         public ChiDinh(OrderPatientInfo orderPatientInfo, TiepNhanTiem parentControl)
         {
             InitializeComponent();
-
+            _firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
             _parentControl = parentControl;
             _orderPatientInfo = orderPatientInfo; // Use OrderPatientInfo to get all patient details
 
@@ -28,7 +31,7 @@ namespace QuanLyTiemChung.MVVM
             {
                 MessageBox.Show($"Patient ID: {_orderPatientInfo.PatientID}", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 Console.WriteLine($"Patient ID: {_orderPatientInfo.PatientID}");
-                LoadVaccinesFromJson();
+                LoadVaccinesAsync();
             }
             else
             {
@@ -40,59 +43,61 @@ namespace QuanLyTiemChung.MVVM
         public ChiDinh()
         {
             InitializeComponent();
-            LoadVaccines();
+            LoadVaccinesAsync();
         }
 
-        private async void LoadVaccines()
+        private async Task LoadVaccinesAsync()
         {
             try
             {
-                var firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
-                var vaccineCollection = await firestoreDb.Collection("vaccines").GetSnapshotAsync();
+                var vaccinesCollection = _firestoreDb.Collection("vaccines");
+                var snapshot = await vaccinesCollection.GetSnapshotAsync();
 
-                var vaccines = new List<Vaccines>();
-
-                foreach (var document in vaccineCollection.Documents)
+                vaccinesList.Clear();
+                foreach (var document in snapshot.Documents)
                 {
-                    try
-                    {
-                        var vaccine = document.ConvertTo<Vaccines>();
-
-                        // Convert decimal to int for Price
-                        if (vaccine.Price != null && vaccine.Price > 0)
-                        {
-                            vaccine.Price = (int)vaccine.Price; // Casting decimal to int
-                        }
-
-                        vaccines.Add(vaccine);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error converting document to Vaccine: {ex.Message}");
-                    }
+                    var vaccine = document.ConvertTo<Vaccines>();
+                    vaccinesList.Add(vaccine);
                 }
-
-                vaccineComboBox.ItemsSource = vaccines;
-                vaccineComboBox.DisplayMemberPath = "VaccineName";
-
-                if (vaccines.Count == 0)
+                string log = "Vaccines List Content:\n";
+                foreach (var vaccine in vaccinesList)
                 {
-                    MessageBox.Show("No vaccines found in the Firestore collection.", "No Data", MessageBoxButton.OK, MessageBoxImage.Information);
+                    log += $"ID: {vaccine.VaccineID}, Name: {vaccine.VaccineName}\n";
                 }
+                MessageBox.Show(log, "Vaccine List");
+                vaccineComboBox.ItemsSource = vaccinesList;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading vaccine data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error fetching vaccines: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        private void OnVaccineSelected(object sender, SelectionChangedEventArgs e)
+        {
+            // Kiểm tra ComboBox đã có lựa chọn chưa
+            if (vaccineComboBox.SelectedItem != null)
+            {
+                // Lấy vaccine đã chọn từ ComboBox
+                Vaccines selectedVaccine = vaccineComboBox.SelectedItem as Vaccines;
 
+                // Kiểm tra nếu vaccine có tồn kho > 0, nếu có thì hiển thị "Còn hàng", nếu không thì "Hết hàng"
+                if (selectedVaccine != null)
+                {
+                    // Cập nhật giá trị cho dose (số mũi) mặc định hoặc tùy thuộc vào vaccine
+                    doseTextBox.Text = selectedVaccine.Dosage; // Hoặc bạn có thể điều chỉnh giá trị này tùy theo vaccine
+
+                    // Hiển thị trạng thái còn hàng hay hết hàng
+                    string stockStatus = selectedVaccine.InStock > 0 ? "Còn hàng" : "Hết hàng";
+                    stockStatusTextBlock.Text = stockStatus;  // stockStatusTextBlock là TextBlock hiển thị trạng thái
+                }
+            }
+        }
 
         private async void AssignButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Get selected vaccine
                 var selectedVaccine = (Vaccines)vaccineComboBox.SelectedItem;
 
                 if (selectedVaccine == null)
@@ -100,16 +105,11 @@ namespace QuanLyTiemChung.MVVM
                     MessageBox.Show("Vui lòng chọn vaccine!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
+                // Get quantity value
+                int quantity = string.IsNullOrWhiteSpace(quantityTextBox.Text) || !int.TryParse(quantityTextBox.Text, out quantity) ? 1 : quantity;
 
-                // Validate the number of doses
-                if (string.IsNullOrWhiteSpace(doseTextBox.Text) || !int.TryParse(doseTextBox.Text, out int dose) || dose <= 0)
-                {
-                    MessageBox.Show("Số mũi không hợp lệ!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-
-                // Calculate total price based on number of doses and vaccine price
-                int totalPrice = dose * selectedVaccine.Price;
+                // Calculate the price of the selected vaccine (assuming one vaccine per dose)
+                int totalVaccinePrice = quantity * selectedVaccine.Price;
 
                 // Prepare the medical record info to be saved
                 var medicalRecord = new MedicalRecord
@@ -118,19 +118,18 @@ namespace QuanLyTiemChung.MVVM
                     Name = _orderPatientInfo?.Name ?? "Unknown",
                     Gender = _orderPatientInfo?.Gender ?? "Unknown",
                     Address = _orderPatientInfo?.Address ?? "Unknown",
-                    TotalPrice = totalPrice,
+                    TotalPrice = totalVaccinePrice, // Calculating the total price here
                     InvoiceStatus = "waiting",
-                    CreatedAt = Timestamp.GetCurrentTimestamp()
+                    CreatedAt = Timestamp.GetCurrentTimestamp(),
+                    VaccineList = new List<string> { selectedVaccine.VaccineID } // Add the selected vaccine ID to the list
                 };
 
-                // Firestore reference for saving the MedicalRecord
                 var firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
-                var medicalRecordRef = firestoreDb.Collection("MedicalRecords").Document(_orderPatientInfo.PatientID);
 
-                // Save the new medical record to Firestore
                 try
                 {
-                    await medicalRecordRef.SetAsync(medicalRecord);
+                    var medicalRecordRef = firestoreDb.Collection("MedicalRecords").Document(_orderPatientInfo.PatientID);
+                    await medicalRecordRef.SetAsync(medicalRecord); // Save or overwrite the document
                     Console.WriteLine("Medical Record saved successfully.");
                 }
                 catch (Exception ex)
@@ -167,81 +166,72 @@ namespace QuanLyTiemChung.MVVM
             }
         }
 
-
-        private void LoadVaccinesFromJson()
+        private void AddVaccineRow_Click(object sender, RoutedEventArgs e)
         {
-            try
+            // Tạo một Grid mới để chứa các điều khiển cho vaccine mới
+            Grid newRow = new Grid();
+            newRow.Margin = new Thickness(0, 10, 0, 0);
+
+            // Định nghĩa các cột trong Grid
+            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) });
+            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) });
+            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
+
+            // Tạo ComboBox cho Tên Vaccine
+            ComboBox vaccineComboBox = new ComboBox();
+            vaccineComboBox.Margin = new Thickness(5);
+            vaccineComboBox.Height = 30;
+            vaccineComboBox.ItemsSource = vaccinesList; // vaccinesList chứa dữ liệu vaccine
+            vaccineComboBox.SelectedValuePath = "VaccineName";
+            vaccineComboBox.DisplayMemberPath = "VaccineName";
+            vaccineComboBox.SelectionChanged += OnVaccineSelected;
+            Grid.SetColumn(vaccineComboBox, 0);
+
+            // Tạo TextBox cho Liều lượng (sẽ được cập nhật khi chọn Vaccine)
+            TextBox doseTextBox = new TextBox();
+            doseTextBox.Margin = new Thickness(5);
+            doseTextBox.Height = 30;
+            doseTextBox.IsReadOnly = true; // Read-only để tự động cập nhật từ vaccine
+            Grid.SetColumn(doseTextBox, 1);
+
+            // Tạo TextBox cho Số lượng
+            TextBox quantityTextBox = new TextBox();
+            quantityTextBox.Margin = new Thickness(5);
+            quantityTextBox.Height = 30;
+            quantityTextBox.Text = "1"; // Giá trị mặc định
+            Grid.SetColumn(quantityTextBox, 2);
+
+            // Tạo TextBlock cho Tình trạng (Sẽ được thay đổi khi vaccine thay đổi)
+            TextBlock stockStatusTextBlock = new TextBlock();
+            stockStatusTextBlock.Margin = new Thickness(5);
+            stockStatusTextBlock.Height = 30;
+            stockStatusTextBlock.FontWeight = FontWeights.Bold;
+            stockStatusTextBlock.Foreground = new SolidColorBrush(Colors.Green); // Mặc định màu xanh
+            Grid.SetColumn(stockStatusTextBlock, 3);
+
+            // Tạo Button Xóa
+            Button deleteButton = new Button();
+            deleteButton.Width = 30;
+            deleteButton.Height = 30;
+            deleteButton.Margin = new Thickness(5);
+            deleteButton.Background = new SolidColorBrush(Color.FromRgb(235, 64, 52));
+            deleteButton.Click += (s, args) =>
             {
-                string jsonFilePath = @"D://QuanLyTiemChung//QuanLyTiemChung//vaccines.json";
+                vaccinesStackPanel.Children.Remove(newRow); // Xóa dòng khi click
+            };
+            Grid.SetColumn(deleteButton, 4);
 
-                if (!File.Exists(jsonFilePath))
-                {
-                    MessageBox.Show("Không tìm thấy tệp dữ liệu vaccine!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+            // Thêm các điều khiển vào dòng mới
+            newRow.Children.Add(vaccineComboBox);
+            newRow.Children.Add(doseTextBox);
+            newRow.Children.Add(quantityTextBox);
+            newRow.Children.Add(stockStatusTextBlock);
+            newRow.Children.Add(deleteButton);
 
-                string jsonData = File.ReadAllText(jsonFilePath);
-                Console.WriteLine($"Dữ liệu JSON đọc được: {jsonData}");
-
-                var vaccines = JsonConvert.DeserializeObject<List<Vaccines>>(jsonData);
-
-                if (vaccines != null && vaccines.Count > 0)
-                {
-                    vaccineComboBox.ItemsSource = vaccines;
-                    vaccineComboBox.DisplayMemberPath = "VaccineName";
-                    Console.WriteLine("Dữ liệu vaccine đã được nạp thành công.");
-                }
-                else
-                {
-                    MessageBox.Show("Không có vaccine nào trong tệp dữ liệu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải dữ liệu từ JSON: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private async void SaveVaccinesToJson()
-        {
-            try
-            {
-                string jsonFilePath = @"D://QuanLyTiemChung//QuanLyTiemChung//vaccines.json";
-                string directory = Path.GetDirectoryName(jsonFilePath);
-
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Fetch vaccines from Firestore
-                var firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
-                var vaccineCollection = await firestoreDb.Collection("vaccines").GetSnapshotAsync();
-
-                var vaccines = new List<Vaccines>();
-                foreach (var document in vaccineCollection.Documents)
-                {
-                    try
-                    {
-                        var vaccine = document.ConvertTo<Vaccines>();
-                        vaccines.Add(vaccine);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error converting document to Vaccine: {ex.Message}");
-                    }
-                }
-
-                // Serialize to JSON
-                string json = JsonConvert.SerializeObject(vaccines, Formatting.Indented);
-                File.WriteAllText(jsonFilePath, json);
-
-                MessageBox.Show("Dữ liệu đã được lưu vào file JSON!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi lưu dữ liệu vào JSON: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            // Thêm dòng mới vào StackPanel
+            vaccinesStackPanel.Children.Add(newRow);
         }
     }
 }

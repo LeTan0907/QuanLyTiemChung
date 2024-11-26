@@ -75,5 +75,10 @@ namespace QuanLyTiemChung.MVVM
                 MessageBox.Show($"Error saving data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _parentControl.Content = new TiepNhanTiem();
+        }
     }
 }

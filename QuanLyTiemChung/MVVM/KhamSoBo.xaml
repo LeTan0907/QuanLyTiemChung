@@ -11,15 +11,10 @@
     </UserControl.Resources>
 
     <Grid Margin="0,0,0,489" Height="Auto">
-        <!-- Define Row Definitions for proper layout -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Header Section (if any) -->
             <RowDefinition Height="*"/>
-            <!-- Main Content Section (with ScrollViewer) -->
         </Grid.RowDefinitions>
-
-        <!-- Scrollable Form Section -->
 
         <StackPanel Margin="15,10,5,-459" Grid.Row="1">
             <!-- Weight and Temperature Inputs -->
@@ -35,72 +30,85 @@
                 <TextBlock Text="1. Hôm nay bạn có bị bệnh gì không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question1" />
-                    <RadioButton Content="Không" GroupName="Question1" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question1" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="2. Bạn có dị ứng với thuốc, thức ăn hay vắc xin không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question2" />
-                    <RadioButton Content="Không" GroupName="Question2" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question2" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="3. Bạn có bị phản ứng nặng sau những lần tiêm chủng vắc xin trước đây không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question3" />
-                    <RadioButton Content="Không" GroupName="Question3" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question3" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="4. Bạn có bị động kinh hoặc có bệnh lý về não, thần kinh không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question4" />
-                    <RadioButton Content="Không" GroupName="Question4" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question4" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="5. Bạn có bị ung thư, bệnh bạch cầu, AIDS, hay bất cứ rối loạn hệ thống miễn dịch nào hay không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question5" />
-                    <RadioButton Content="Không" GroupName="Question5" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question5" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="6. Trong vòng 3 tháng qua, bạn có được sử dụng cortisone, prednisone, các thuốc steroids khác hay thuốc điều trị ung thư hoặc điều trị bằng tia X không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question6" />
-                    <RadioButton Content="Không" GroupName="Question6" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question6" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="7. Trong vòng một năm qua, bạn có được truyền máu hoặc các chế phẩm từ máu hay có sử dụng globulin miễn dịch không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question7" />
-                    <RadioButton Content="Không" GroupName="Question7" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question7" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="8. Đối với phụ nữ, bạn có đang mang thai hay có dự định mang thai trong tháng tới không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question8" />
-                    <RadioButton Content="Không" GroupName="Question8" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question8" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="9. Bạn có được tiêm chủng vắc xin trong 4 tuần vừa qua không?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question9" />
-                    <RadioButton Content="Không" GroupName="Question9" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question9" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="10. Thân nhiệt cao hơn 37,5 độ C hoặc thấp hơn 35,5 độ C?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question10" />
-                    <RadioButton Content="Không" GroupName="Question10" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question10" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="11. Tri giác bất thường?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question11" />
-                    <RadioButton Content="Không" GroupName="Question11" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question11" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="12. Nhịp tim bất thường" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question12" />
-                    <RadioButton Content="Không" GroupName="Question12" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question12" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
+
                 <TextBlock Text="13. Nhịp thở, phổi bất thường?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question13" />
-                    <RadioButton Content="Không" GroupName="Question13" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question13" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
-                <TextBlock Text="14. Chống chỉ định khác?" Margin="0,10,0,0" RenderTransformOrigin="0.502,2.787"/>
+
+                <TextBlock Text="14. Chống chỉ định khác?" Margin="0,10,0,0"/>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="Có" GroupName="Question14" />
-                    <RadioButton Content="Không" GroupName="Question14" Margin="20,0,0,0"/>
+                    <RadioButton Content="Không" GroupName="Question14" Margin="20,0,0,0" IsChecked="True"/>
                 </StackPanel>
 
                 <TextBlock Text="Đối tượng có đủ điều kiện tiêm không?" FontWeight="SemiBold" Margin="0,10,0,0"/>
@@ -112,7 +120,7 @@
                 <!-- Buttons Section -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
                     <Button Style="{StaticResource addButton}" Content="Lưu " Width="150" Margin="5" Click="SaveButton_Click"/>
-                    <Button Style="{StaticResource delButton}" Content="Hủy" Width="100" Margin="5"/>
+                    <Button Style="{StaticResource delButton}" Content="Hủy" Width="100" Margin="5" Click="Button_Click"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

@@ -26,7 +26,7 @@
               
 
                 <!-- Vaccination Code Column -->
-                <DataGridTextColumn Header="Mã nhân viên" Binding="{Binding IDNumber}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Mã nhân viên" Binding="{Binding UserID}" IsReadOnly="True" Width="*" />
 
                 <!-- Name Column with Icon -->
                 <DataGridTemplateColumn Header="Họ tên" IsReadOnly="True" Width="*">
@@ -45,7 +45,7 @@
                 <!-- Gender Column -->
                 <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" IsReadOnly="True" Width="100" />
                 <!-- Number Column -->
-                <DataGridTextColumn Header="Chức vụ" IsReadOnly="True" CanUserResize="False" Width="100" Binding="{Binding Number}"/>
+                <DataGridTextColumn Header="Chức vụ" Binding="{Binding Role}" IsReadOnly="True" CanUserResize="False" Width="100"/>
                 <DataGridTextColumn Header="SĐT" Binding="{Binding PhoneNumber}" IsReadOnly="True" Width="100" />
                 <!-- Address Column -->
                 <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" IsReadOnly="True" Width="*" />
@@ -61,7 +61,7 @@
                                 </Button>
 
                                 <!-- Edit Button -->
-                                <Button ToolTip="Edit" Margin="5,0,0,0" Style="{StaticResource gridEditButton}">
+                                <Button ToolTip="Edit" Margin="5,0,0,0" Style="{StaticResource gridEditButton}" Click="Button_Click">
                                     <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
 
