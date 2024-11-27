@@ -149,17 +149,27 @@ namespace QuanLyTiemChung.MVVM
             // Update patient information
             _patient.Name = HoTenTextBox.Text;
             _patient.DOB = Timestamp.FromDateTime(DateTime.Parse(NgaySinhTextBox.Text).ToUniversalTime());
+
             string gioiTinh = (GioiTinhComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             _patient.Gender = gioiTinh;
+
             _patient.PhoneNumber = DienThoaiTextBox.Text;
             _patient.IDNumber = CCCDTextBox.Text;
-            _patient.PriorityGroup = NhomDoiTuongComboBox.SelectedItem.ToString();
+            _patient.PriorityGroup = NhomDoiTuongComboBox.SelectedItem?.ToString() ?? "";
             _patient.Notes = GhiChuTextBox.Text;
 
-            // Get address from ComboBoxes
+            // Ensure that the ComboBox items are selected before using them
             string city = CityComboBox.SelectedItem?.ToString() ?? "";
             string district = DistrictComboBox.SelectedItem?.ToString() ?? "";
             string ward = WardComboBox.SelectedItem?.ToString() ?? "";
+
+            // Ensure that no ComboBox selection is null or empty
+            if (string.IsNullOrEmpty(city) || string.IsNullOrEmpty(district) || string.IsNullOrEmpty(ward))
+            {
+                MessageBox.Show("Vui lòng chọn đầy đủ thông tin về địa chỉ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return; // Prevent saving if any part of the address is missing
+            }
+
             string address = $"{city}, {district}, {ward}";
             _patient.Address = address;
 
@@ -179,6 +189,7 @@ namespace QuanLyTiemChung.MVVM
                 MessageBox.Show($"Lỗi khi cập nhật thông tin bệnh nhân: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void Cancel(object sender, RoutedEventArgs e)
         {
