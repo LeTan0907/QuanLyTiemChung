@@ -29,12 +29,10 @@
                       Background="White"
                       Margin="0,10,10,0"
                                 ItemsSource="{Binding FilteredPatients}">
-           
+
 
                 <DataGrid.Columns>
-                   
-                    <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding Number}"/>
-                    <DataGridTextColumn Header="Mã " Binding="{Binding IDNumber}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Mã " Binding="{Binding RecordsID}" IsReadOnly="True" Width="*"/>
                     <DataGridTemplateColumn Header="Họ tên" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -48,16 +46,13 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Tổng giá" Binding="{Binding TotalPrice}" IsReadOnly="True" Width="*"/>
-                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding InvoiceStatus}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Tình trạng" Binding="{Binding InvoiceStatus}" IsReadOnly="True" Width="*"/>
                     <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Style="{StaticResource gridEditButton}" Command="{Binding EditCommand}">
                                         <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
-                                    </Button>
-                                    <Button Margin="5,0,0,0" Style="{StaticResource gridRemoveButton}"   Command="{Binding DeleteCommand}">
-                                        <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                     </Button>
                                 </StackPanel>
                             </DataTemplate>

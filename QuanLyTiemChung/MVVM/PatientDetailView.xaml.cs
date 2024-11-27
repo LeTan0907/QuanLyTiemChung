@@ -22,9 +22,18 @@ namespace QuanLyTiemChung.MVVM
         public PatientDetailView(Patient selectedPatient)
         {
             InitializeComponent();
-
-            // Gán đối tượng bệnh nhân vào DataContext để sử dụng trong XAML
             this.DataContext = selectedPatient;
+            // Kiểm tra xem DOB có phải là null không
+            if (selectedPatient.DOB != null)
+            {
+                // Chuyển Timestamp thành DateTime và hiển thị trong TextBox với định dạng dd/MM/yyyy
+                var dob = selectedPatient.DOB.ToDateTime();  // Chuyển Timestamp thành DateTime
+                DOBTextBox.Text = dob.ToString("dd/MM/yyyy"); // Định dạng DateTime thành dd/MM/yyyy
+            }
+            else
+            {
+                DOBTextBox.Text = "Không có thông tin"; // Hoặc bạn có thể để rỗng
+            }
         }
         private void Dong(object sender, RoutedEventArgs e)
         {

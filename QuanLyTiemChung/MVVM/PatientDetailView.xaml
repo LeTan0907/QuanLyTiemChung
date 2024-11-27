@@ -41,9 +41,9 @@
 
             <!-- Date of Birth -->
             <TextBlock Text="Ngày sinh:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="5"/>
-            <TextBox Grid.Row="1" Grid.Column="3" Height="30" Width="200" Margin="5" 
+            <TextBox x:Name="DOBTextBox" Grid.Row="1" Grid.Column="3" Height="30" Width="200" Margin="5" 
                      VerticalContentAlignment="Center" IsReadOnly="True" 
-                     Text="{Binding DateOfBirth}"/>
+                     />
 
             <!-- Gender -->
             <TextBlock Text="Giới tính:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="5"/>
@@ -83,7 +83,7 @@
 
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Right" Margin="0,58,16,10">
-                <Button Content="Đóng" Width="100" Height="30" Margin="5" Click="Dong"/>
+                <Button Style="{StaticResource delButton}" Content="Đóng" Width="100" Height="30" Margin="5" Click="Dong"/>
             </StackPanel>
         </Grid>
     </Border>

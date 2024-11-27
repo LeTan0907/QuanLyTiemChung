@@ -60,7 +60,7 @@
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <TextBlock Text="Tuổi:" FontWeight="SemiBold"/>
-                <TextBox x:Name="TuoiTextBox" Width="200" Height="50" IsReadOnly="True"/>
+                <TextBox x:Name="TuoiTextBox" Width="200" Height="50" IsReadOnly="True" TextChanged="NgaySinhTextBox_TextChanged"/>
             </StackPanel>
         </Grid>
 

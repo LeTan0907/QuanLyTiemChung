@@ -15,7 +15,7 @@ namespace QuanLyTiemChung.MVVM
 {
     public partial class ChiDinh : UserControl
     {
-        private OrderPatientInfo _orderPatientInfo; 
+        private OrderPatientInfo _orderPatientInfo;
         private TiepNhanTiem _parentControl;
         private readonly FirestoreDb _firestoreDb;
         public ObservableCollection<Vaccines> vaccinesList { get; set; } = new ObservableCollection<Vaccines>();
@@ -26,11 +26,9 @@ namespace QuanLyTiemChung.MVVM
             _firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
             _parentControl = parentControl;
             _orderPatientInfo = orderPatientInfo; // Use OrderPatientInfo to get all patient details
-
+            
             if (_orderPatientInfo != null)
             {
-                MessageBox.Show($"Patient ID: {_orderPatientInfo.PatientID}", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-                Console.WriteLine($"Patient ID: {_orderPatientInfo.PatientID}");
                 LoadVaccinesAsync();
             }
             else
@@ -66,6 +64,7 @@ namespace QuanLyTiemChung.MVVM
                 }
                 MessageBox.Show(log, "Vaccine List");
                 vaccineComboBox.ItemsSource = vaccinesList;
+                vaccineComboBox1.ItemsSource = vaccinesList;
             }
             catch (Exception ex)
             {
@@ -75,56 +74,96 @@ namespace QuanLyTiemChung.MVVM
 
         private void OnVaccineSelected(object sender, SelectionChangedEventArgs e)
         {
-            // Kiểm tra ComboBox đã có lựa chọn chưa
-            if (vaccineComboBox.SelectedItem != null)
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox.SelectedItem != null)
             {
-                // Lấy vaccine đã chọn từ ComboBox
-                Vaccines selectedVaccine = vaccineComboBox.SelectedItem as Vaccines;
+                // Kiểm tra vaccine đã chọn từ ComboBox
+                Vaccines selectedVaccine = comboBox.SelectedItem as Vaccines;
 
-                // Kiểm tra nếu vaccine có tồn kho > 0, nếu có thì hiển thị "Còn hàng", nếu không thì "Hết hàng"
                 if (selectedVaccine != null)
                 {
-                    // Cập nhật giá trị cho dose (số mũi) mặc định hoặc tùy thuộc vào vaccine
-                    doseTextBox.Text = selectedVaccine.Dosage; // Hoặc bạn có thể điều chỉnh giá trị này tùy theo vaccine
-
-                    // Hiển thị trạng thái còn hàng hay hết hàng
-                    string stockStatus = selectedVaccine.InStock > 0 ? "Còn hàng" : "Hết hàng";
-                    stockStatusTextBlock.Text = stockStatus;  // stockStatusTextBlock là TextBlock hiển thị trạng thái
+                    // Cập nhật liều lượng (dose) cho TextBox tương ứng
+                    if (comboBox == vaccineComboBox)
+                    {
+                        doseTextBox.Text = selectedVaccine.Dosage; // Liều lượng cho vaccineComboBox
+                        stockStatusTextBlock.Text = selectedVaccine.InStock > 0 ? "Còn hàng" : "Hết hàng";
+                    }
+                    else if (comboBox == vaccineComboBox1)
+                    {
+                        doseTextBox1.Text = selectedVaccine.Dosage; // Liều lượng cho vaccineComboBox1
+                        stockStatusTextBlock1.Text = selectedVaccine.InStock > 0 ? "Còn hàng" : "Hết hàng";
+                    }
                 }
             }
         }
-
         private async void AssignButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var selectedVaccine = (Vaccines)vaccineComboBox.SelectedItem;
+                var selectedVaccines = new List<(Vaccines vaccine, int quantity)>();
 
-                if (selectedVaccine == null)
+                // Kiểm tra vaccine đầu tiên (vaccineComboBox)
+                var selectedVaccine1 = vaccineComboBox.SelectedItem as Vaccines;
+                if (selectedVaccine1 != null)
                 {
-                    MessageBox.Show("Vui lòng chọn vaccine!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    int quantity1 = string.IsNullOrWhiteSpace(quantityTextBox.Text) || !int.TryParse(quantityTextBox.Text, out quantity1) ? 1 : quantity1;
+                    selectedVaccines.Add((selectedVaccine1, quantity1));
+                }
+
+                // Kiểm tra vaccine thứ hai (vaccineComboBox1)
+                var selectedVaccine2 = vaccineComboBox1.SelectedItem as Vaccines;
+                if (selectedVaccine2 != null)
+                {
+                    int quantity2 = string.IsNullOrWhiteSpace(quantityTextBox1.Text) || !int.TryParse(quantityTextBox1.Text, out quantity2) ? 1 : quantity2;
+                    selectedVaccines.Add((selectedVaccine2, quantity2));
+                }
+
+                if (selectedVaccines.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn ít nhất một loại vaccine!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Lấy số lượng (quantity) từ TextBox
-                int quantity = string.IsNullOrWhiteSpace(quantityTextBox.Text) || !int.TryParse(quantityTextBox.Text, out quantity) ? 1 : quantity;
+                // Tính tổng giá tiền và kiểm tra số lượng vaccine có đủ hay không
+                int totalVaccinePrice = 0;
+                var vaccineMap = new Dictionary<string, int>();
 
-                // Tính giá tổng cộng của vaccine
-                int totalVaccinePrice = quantity * selectedVaccine.Price;
+                foreach (var (vaccine, quantity) in selectedVaccines)
+                {
+                    totalVaccinePrice += vaccine.Price * quantity;
+                    vaccineMap[vaccine.VaccineID] = quantity;
+
+                    // Kiểm tra số lượng vaccine có trong kho
+                    var vaccineRef = _firestoreDb.Collection("vaccines").Document(vaccine.VaccineID);
+                    var vaccineDoc = await vaccineRef.GetSnapshotAsync();
+
+                    if (!vaccineDoc.Exists)
+                    {
+                        MessageBox.Show("Vaccine không tồn tại trong kho!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    var vaccineInStock = vaccineDoc.ConvertTo<Vaccines>();
+
+                    // Kiểm tra số lượng vaccine có đủ hay không
+                    if (vaccineInStock.InStock < quantity)
+                    {
+                        MessageBox.Show($"Số lượng vaccine {vaccine.VaccineName} không đủ trong kho. Còn lại {vaccineInStock.InStock}!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Giảm số lượng vaccine trong kho
+                    int newStock = vaccineInStock.InStock - quantity;
+                    await vaccineRef.UpdateAsync("InStock", newStock);
+                }
 
                 // Tạo RecordsID mới theo ngày tháng + số thứ tự
                 string newRecordsID = await GenerateRecordsIDAsync();
 
-                // Tạo Dictionary cho VaccineList với mã vaccine và số lượng
-                var vaccineMap = new Dictionary<string, int>
-        {
-            { selectedVaccine.VaccineID, quantity }
-        };
-
                 // Chuẩn bị thông tin MedicalRecord để lưu
                 var medicalRecord = new MedicalRecord
                 {
-                    RecordsID = newRecordsID, // Sử dụng ID đã tạo
+                    RecordsID = newRecordsID,
                     PatientID = _orderPatientInfo?.PatientID ?? "Unknown",
                     Name = _orderPatientInfo?.Name ?? "Unknown",
                     Gender = _orderPatientInfo?.Gender ?? "Unknown",
@@ -170,14 +209,13 @@ namespace QuanLyTiemChung.MVVM
                 MessageBox.Show("Thông tin chỉ định đã được lưu và đơn đã hoàn thành!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Điều hướng đến trang khác
-                _parentControl.NavigateToDanhSachKham();
+                _parentControl.Content = new TiepNhanTiem();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
 
         private async Task<string> GenerateRecordsIDAsync()
         {
@@ -210,70 +248,30 @@ namespace QuanLyTiemChung.MVVM
         }
         private void AddVaccineRow_Click(object sender, RoutedEventArgs e)
         {
-            // Tạo một Grid mới để chứa các điều khiển cho vaccine mới
-            Grid newRow = new Grid();
-            newRow.Margin = new Thickness(0, 10, 0, 0);
+            vaccineRowTemplate1.Visibility = (vaccineRowTemplate1.Visibility == Visibility.Collapsed)
+                                    ? Visibility.Visible
+                                    : Visibility.Collapsed;
+        }
 
-            // Định nghĩa các cột trong Grid
-            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) });
-            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) });
-            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-            newRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
-
-            // Tạo ComboBox cho Tên Vaccine
-            ComboBox vaccineComboBox = new ComboBox();
-            vaccineComboBox.Margin = new Thickness(5);
-            vaccineComboBox.Height = 30;
-            vaccineComboBox.ItemsSource = vaccinesList; // vaccinesList chứa dữ liệu vaccine
-            vaccineComboBox.SelectedValuePath = "VaccineName";
-            vaccineComboBox.DisplayMemberPath = "VaccineName";
-            vaccineComboBox.SelectionChanged += OnVaccineSelected;
-            Grid.SetColumn(vaccineComboBox, 0);
-
-            // Tạo TextBox cho Liều lượng (sẽ được cập nhật khi chọn Vaccine)
-            TextBox doseTextBox = new TextBox();
-            doseTextBox.Margin = new Thickness(5);
-            doseTextBox.Height = 30;
-            doseTextBox.IsReadOnly = true; // Read-only để tự động cập nhật từ vaccine
-            Grid.SetColumn(doseTextBox, 1);
-
-            // Tạo TextBox cho Số lượng
-            TextBox quantityTextBox = new TextBox();
-            quantityTextBox.Margin = new Thickness(5);
-            quantityTextBox.Height = 30;
-            quantityTextBox.Text = "1"; // Giá trị mặc định
-            Grid.SetColumn(quantityTextBox, 2);
-
-            // Tạo TextBlock cho Tình trạng (Sẽ được thay đổi khi vaccine thay đổi)
-            TextBlock stockStatusTextBlock = new TextBlock();
-            stockStatusTextBlock.Margin = new Thickness(5);
-            stockStatusTextBlock.Height = 30;
-            stockStatusTextBlock.FontWeight = FontWeights.Bold;
-            stockStatusTextBlock.Foreground = new SolidColorBrush(Colors.Green); // Mặc định màu xanh
-            Grid.SetColumn(stockStatusTextBlock, 3);
-
-            // Tạo Button Xóa
-            Button deleteButton = new Button();
-            deleteButton.Width = 30;
-            deleteButton.Height = 30;
-            deleteButton.Margin = new Thickness(5);
-            deleteButton.Background = new SolidColorBrush(Color.FromRgb(235, 64, 52));
-            deleteButton.Click += (s, args) =>
+        private void DeleteRow_Click(object sender, RoutedEventArgs e)
+        {
+            // Tìm StackPanel cha chứa các hàng vaccine
+            var button = sender as Button;
+            if (button != null)
             {
-                vaccinesStackPanel.Children.Remove(newRow); // Xóa dòng khi click
-            };
-            Grid.SetColumn(deleteButton, 4);
-
-            // Thêm các điều khiển vào dòng mới
-            newRow.Children.Add(vaccineComboBox);
-            newRow.Children.Add(doseTextBox);
-            newRow.Children.Add(quantityTextBox);
-            newRow.Children.Add(stockStatusTextBlock);
-            newRow.Children.Add(deleteButton);
-
-            // Thêm dòng mới vào StackPanel
-            vaccinesStackPanel.Children.Add(newRow);
+                // Tìm StackPanel hoặc Grid chứa hàng này
+                var gridRow = button.Parent as Grid;
+                if (gridRow != null)
+                {
+                    // Tìm StackPanel hoặc Grid của một hàng cụ thể trong GridRow
+                    var stackPanel = gridRow.Parent as StackPanel;
+                    if (stackPanel != null)
+                    {
+                        // Ẩn hàng
+                        stackPanel.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace QuanLyTiemChung.MVVM
 {
@@ -36,6 +37,7 @@ namespace QuanLyTiemChung.MVVM
         }
 
         // Load patient data from Firestore using PatientID
+        // Load patient data from Firestore using PatientID
         private async void LoadPatientData()
         {
             try
@@ -56,13 +58,15 @@ namespace QuanLyTiemChung.MVVM
                     // Bind patient data to the UI
                     Patient patient = snapshot.ConvertTo<Patient>();
                     HoTenTextBox.Text = patient.Name;
-                    // When loading and displaying the patient's DOB
                     NgaySinhTextBox.Text = patient.DOB.ToDateTime().ToLocalTime().ToString("dd/MM/yyyy");
-
                     GioiTinhComboBox.Text = patient.Gender;
                     DienThoaiTextBox.Text = patient.PhoneNumber;
                     DiaChiTextBox.Text = patient.Address;
                     GhiChuTextBox.Text = patient.Notes;
+
+                    // Calculate age based on the patient's date of birth
+                    var age = CalculateAge(patient.DOB.ToDateTime());
+                    TuoiTextBox.Text = $"{age.Years} tuổi {age.Months} tháng {age.Days} ngày"; // Update TuoiTextBox with calculated age
                 }
                 else
                 {
@@ -75,21 +79,21 @@ namespace QuanLyTiemChung.MVVM
             }
         }
 
-        // Get today's order count from Firestore
+
         private async Task<int> GetTodayOrderCountAsync()
         {
             var today = DateTime.UtcNow.Date;
             var tomorrow = today.AddDays(1);
 
+            // Ensure correct query format
             Query query = _firestoreDb.Collection("orders")
-                .WhereGreaterThanOrEqualTo("CreationTime", Timestamp.FromDateTime(today))
-                .WhereLessThan("CreationTime", Timestamp.FromDateTime(tomorrow));
+                .WhereGreaterThanOrEqualTo("CreationTime", Timestamp.FromDateTime(today)) // Starting from midnight today
+                .WhereLessThan("CreationTime", Timestamp.FromDateTime(tomorrow)); // Up to midnight of the next day
 
             QuerySnapshot snapshot = await query.GetSnapshotAsync();
             return snapshot.Documents.Count;
         }
-
-        // Load queue number for today
+       // Load queue number for today
         private async void LoadQueueNumberForToday()
         {
             try
@@ -182,5 +186,67 @@ namespace QuanLyTiemChung.MVVM
         {
             this.Close();
         }
+
+        private void NgaySinhTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                // Check if the entered date is valid
+                if (DateTime.TryParse(NgaySinhTextBox.Text, out DateTime birthDate))
+                {
+                    // Calculate the age in years, months, and days
+                    var age = CalculateAge(birthDate);
+
+                    // Set the calculated age in TuoiTextBox in the desired format
+                    TuoiTextBox.Text = $"{age.Years} tuổi {age.Months} tháng {age.Days} ngày";
+                }
+                else
+                {
+                    // If the date is invalid, clear the age field
+                    TuoiTextBox.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that may occur
+                MessageBox.Show($"Error calculating age: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private (int Years, int Months, int Days) CalculateAge(DateTime birthDate)
+        {
+            // Get today's date
+            DateTime today = DateTime.Today;
+
+            // Calculate the full years between birth date and today
+            int years = today.Year - birthDate.Year;
+
+            // Adjust the years if the birthday hasn't occurred yet this year
+            if (today.Month < birthDate.Month || (today.Month == birthDate.Month && today.Day < birthDate.Day))
+            {
+                years--;
+            }
+
+            // Calculate the months
+            int months = today.Month - birthDate.Month;
+            if (months < 0)
+            {
+                months += 12; // Add 12 months if negative
+            }
+
+            // Calculate the days
+            int days = today.Day - birthDate.Day;
+            if (days < 0)
+            {
+                // If the day is negative, adjust the day and subtract a month
+                months--;
+                days += DateTime.DaysInMonth(today.Year, today.Month);
+            }
+
+            // Return years, months, and days as a tuple
+            return (years, months, days);
+        }
+
+        
     }
 }

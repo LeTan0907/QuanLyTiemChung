@@ -110,5 +110,48 @@ namespace QuanLyTiemChung.MVVM
                 }
             }
         }
+
+        private async void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string searchText = SearchTextBox.Text.Trim().ToLower(); // Get the text from the search box and trim it
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                try
+                {
+                    // Perform a Firestore query to search for patients by name
+                    var snapshot = await _firestoreDb.Collection("patients")
+                                                     .WhereGreaterThanOrEqualTo("Name", searchText)
+                                                     .WhereLessThanOrEqualTo("Name", searchText + "\uf8ff") // Unicode trick to match the full name
+                                                     .GetSnapshotAsync();
+
+                    // Clear the existing patients list
+                    Patients.Clear();
+
+                    // Loop through the fetched data and add it to the ObservableCollection
+                    foreach (var document in snapshot.Documents)
+                    {
+                        var patient = document.ConvertTo<Patient>();
+                        Patients.Add(patient);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error searching patients: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                // If the search box is empty, reload all patients
+                LoadPatientsFromFirestore();
+            }
+        }
+
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text=string.Empty;
+            LoadPatientsFromFirestore();
+        }
     }
 }

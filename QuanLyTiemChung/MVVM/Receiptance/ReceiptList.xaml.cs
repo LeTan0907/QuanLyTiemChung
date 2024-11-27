@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace QuanLyTiemChung.MVVM.Receiptance
 {
@@ -50,42 +52,52 @@ namespace QuanLyTiemChung.MVVM.Receiptance
                 // Iterate through the documents returned by the query
                 foreach (var document in snapshot.Documents)
                 {
-                    // Convert Firestore document to MedicalRecord
-                    var medicalRecord = document.ConvertTo<MedicalRecord>();
+                    try
+                    {
+                        // Convert Firestore document to MedicalRecord
+                        var medicalRecord = document.ConvertTo<MedicalRecord>();
 
-                    // Safe conversion of TotalPrice to integer (if it's a string in Firestore)
-                    if (medicalRecord.TotalPrice != null)
-                    {
-                        int totalPrice;
-                        if (!int.TryParse(medicalRecord.TotalPrice.ToString(), out totalPrice))
+                        // Safe conversion of TotalPrice to integer (if it's a string in Firestore)
+                        if (medicalRecord.TotalPrice != null)
                         {
-                            // Handle invalid data (could log or set a default value)
-                            totalPrice = 0; // Set to a default value or log an error
-                        }
-                        medicalRecord.TotalPrice = totalPrice;
-                    }
-
-                    // Check if the VaccineList is not null or empty
-                    if (medicalRecord.VaccineList == null)
-                    {
-                        medicalRecord.VaccineList = new Dictionary<string, int>();
-                    }
-                    else
-                    {
-                        // Ensure the values in VaccineList are integers
-                        foreach (var key in medicalRecord.VaccineList.Keys.ToList())
-                        {
-                            int vaccineCount;
-                            if (!int.TryParse(medicalRecord.VaccineList[key].ToString(), out vaccineCount))
+                            int totalPrice;
+                            if (!int.TryParse(medicalRecord.TotalPrice.ToString(), out totalPrice))
                             {
-                                // Handle invalid data (could log or set a default value)
-                                medicalRecord.VaccineList[key] = 0; // Default value
+                                // Log and set to default value if conversion fails
+                                Console.WriteLine($"Invalid TotalPrice for RecordID {medicalRecord.RecordsID}. Defaulting to 0.");
+                                totalPrice = 0; // Set to a default value
+                            }
+                            medicalRecord.TotalPrice = totalPrice;
+                        }
+
+                        // Check if the VaccineList is not null or empty
+                        if (medicalRecord.VaccineList == null)
+                        {
+                            medicalRecord.VaccineList = new Dictionary<string, int>();
+                        }
+                        else
+                        {
+                            // Ensure the values in VaccineList are integers
+                            foreach (var key in medicalRecord.VaccineList.Keys.ToList())
+                            {
+                                int vaccineCount;
+                                if (!int.TryParse(medicalRecord.VaccineList[key].ToString(), out vaccineCount))
+                                {
+                                    // Log and set to default value if conversion fails
+                                    Console.WriteLine($"Invalid Vaccine Count for Vaccine {key} in RecordID {medicalRecord.RecordsID}. Defaulting to 0.");
+                                    medicalRecord.VaccineList[key] = 0; // Default value
+                                }
                             }
                         }
-                    }
 
-                    // Add the medical record to the AllMedicalRecords collection
-                    AllMedicalRecords.Add(medicalRecord);
+                        // Add the medical record to the AllMedicalRecords collection
+                        AllMedicalRecords.Add(medicalRecord);
+                    }
+                    catch (Exception innerEx)
+                    {
+                        // Log any individual errors with each document
+                        Console.WriteLine($"Error processing document {document.Id}: {innerEx.Message}");
+                    }
                 }
 
                 // Log the loaded data for debugging
@@ -104,6 +116,7 @@ namespace QuanLyTiemChung.MVVM.Receiptance
                 MessageBox.Show($"Error fetching medical records: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
 
         private void FilterRecords()
@@ -135,6 +148,9 @@ namespace QuanLyTiemChung.MVVM.Receiptance
                 FilteredPatients.Clear();
                 foreach (var record in filtered)
                 {
+                    // Modify InvoiceStatus directly
+                    record.InvoiceStatus = ModifyInvoiceStatus(record.InvoiceStatus);
+
                     FilteredPatients.Add(record);
                 }
             }
@@ -143,6 +159,24 @@ namespace QuanLyTiemChung.MVVM.Receiptance
                 MessageBox.Show($"Error filtering records: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // Example of direct modification method for InvoiceStatus
+        private string ModifyInvoiceStatus(string invoiceStatus)
+        {
+            // Apply logic to modify the InvoiceStatus directly
+            switch (invoiceStatus.ToLower())
+            {
+                case "paid":
+                    return "Đã thanh toán";  // Example of a direct translation
+                case "waiting":
+                    return "Chưa thanh toán";
+                case "cancelled":
+                    return "Đã hủy";
+                default:
+                    return "Chưa xác định";
+            }
+        }
+
 
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -154,4 +188,10 @@ namespace QuanLyTiemChung.MVVM.Receiptance
             FilterRecords(); // Filter the records whenever the search text changes
         }
     }
+
+
+
+
+
+    
 }

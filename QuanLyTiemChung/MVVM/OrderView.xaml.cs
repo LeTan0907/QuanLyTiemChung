@@ -121,21 +121,34 @@ namespace QuanLyTiemChung.MVVM
             }
         }
 
-        // Search button click handler (implement the search logic based on the Patient ID or other fields)
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var searchText = SearchTextBox.Text.ToLower(); // Get search text from the textbox
+            var searchText = SearchTextBox.Text?.Trim().ToLower();
+
+            if (string.IsNullOrEmpty(searchText))
+            {
+                MessageBox.Show("Vui lòng nhập tên để tìm kiếm.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Lọc danh sách bệnh nhân đã tải theo tên
             var filteredOrders = FilteredPatients.Where(order =>
-                order.IDNumber.ToLower().Contains(searchText) || // Search by PatientID (CCCD)
-                order.Name.ToLower().Contains(searchText) // You can add more search conditions here if needed
+                !string.IsNullOrEmpty(order.Name) && order.Name.ToLower().Contains(searchText)
             ).ToList();
 
-            // Update the ObservableCollection with filtered data
+            // Cập nhật lại danh sách FilteredPatients sau khi tìm kiếm
             FilteredPatients.Clear();
             foreach (var order in filteredOrders)
             {
                 FilteredPatients.Add(order);
             }
+
+            Console.WriteLine($"Found {filteredOrders.Count} orders matching '{searchText}'.");
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = string.Empty;
+            LoadOrdersByDate(DatePicker.SelectedDate.Value);
         }
     }
 }

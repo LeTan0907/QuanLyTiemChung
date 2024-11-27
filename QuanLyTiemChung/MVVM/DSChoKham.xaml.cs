@@ -69,18 +69,21 @@ namespace QuanLyTiemChung.MVVM
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var searchText = SearchTextBox.Text.ToLower();
+            var searchText = SearchTextBox.Text?.ToLower() ?? string.Empty;
+
+            // Lọc danh sách dựa trên tên bệnh nhân
             var filteredOrders = FilteredPatients.Where(order =>
-                order.PatientID.ToLower().Contains(searchText) ||
-                order.Name.ToLower().Contains(searchText)
+                !string.IsNullOrEmpty(order.Name) && order.Name.ToLower().Contains(searchText)
             ).ToList();
 
+            // Cập nhật lại danh sách FilteredPatients
             FilteredPatients.Clear();
             foreach (var order in filteredOrders)
             {
                 FilteredPatients.Add(order);
             }
         }
+
 
         private async void ProceedButton_Click(object sender, RoutedEventArgs e)
         {

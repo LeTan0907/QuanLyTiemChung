@@ -21,13 +21,7 @@
                   Margin="0,10,10,157">
             <DataGrid.Columns>
                 <!-- Checkbox Column -->
-                <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="50" ElementStyle="{StaticResource CheckBoxStyle1}">
-                    <DataGridCheckBoxColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <CheckBox Style="{StaticResource CheckBoxStyle1}"/>
-                        </DataTemplate>
-                    </DataGridCheckBoxColumn.HeaderTemplate>
-                </DataGridCheckBoxColumn>
+                
 
                 <!-- Number Column -->
                 <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="50" Binding="{Binding Number}"/>

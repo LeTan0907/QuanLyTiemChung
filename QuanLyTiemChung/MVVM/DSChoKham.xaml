@@ -12,7 +12,7 @@
             <StackPanel Orientation="Horizontal" Margin="10">
                 <TextBox x:Name="SearchTextBox" Width="200" Margin="5" Style="{StaticResource searchTextbox}" />
                 <Button Style="{StaticResource addButton}" Content="Tìm kiếm" Width="100" Margin="5" Click="SearchButton_Click" />
-                <Button Style="{StaticResource addButton}" Content="Xóa bộ lọc" Width="100" Margin="5" Click="Button_Click"  />
+                <Button Style="{StaticResource addButton}"  Content="Xóa bộ lọc" Width="100" Margin="5" Click="Button_Click"  />
             </StackPanel>
 
             <!-- DataGrid -->
@@ -29,13 +29,7 @@
                       RowHeight="40">
                 <DataGrid.Columns>
                     <!-- Checkbox Column -->
-                    <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="Auto" ElementStyle="{StaticResource CheckBoxStyle1}">
-                        <DataGridCheckBoxColumn.HeaderTemplate>
-                            <DataTemplate>
-                                <CheckBox Style="{StaticResource CheckBoxStyle1}"/>
-                            </DataTemplate>
-                        </DataGridCheckBoxColumn.HeaderTemplate>
-                    </DataGridCheckBoxColumn>
+                    
 
                     <!-- Number Column -->
                     <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding Number}"/>

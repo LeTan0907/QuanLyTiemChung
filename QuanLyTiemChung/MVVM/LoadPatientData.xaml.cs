@@ -70,24 +70,31 @@ namespace QuanLyTiemChung.MVVM
                 MessageBox.Show($"Lỗi khi chọn bệnh nhân: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-    
 
-    // Search function
-    private void SearchButton_Click(object sender, RoutedEventArgs e)
+
+        // Search function
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var searchText = SearchTextBox.Text.ToLower();
+            var searchText = SearchTextBox.Text?.ToLower() ?? string.Empty;
+
+            // Lọc bệnh nhân chỉ dựa trên tên
             var filtered = Patients.Where(p =>
-                p.Name.ToLower().Contains(searchText) ||
-                p.IDNumber.ToLower().Contains(searchText) ||
-                p.PhoneNumber.Contains(searchText)
+                !string.IsNullOrEmpty(p.Name) && p.Name.ToLower().Contains(searchText)
             ).ToList();
 
-            // Update the FilteredPatients collection
+            // Cập nhật danh sách FilteredPatients
             FilteredPatients.Clear();
             foreach (var patient in filtered)
             {
                 FilteredPatients.Add(patient);
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text="";
+            LoadPatientsFromFirestore();
+        }
     }
+
 }
