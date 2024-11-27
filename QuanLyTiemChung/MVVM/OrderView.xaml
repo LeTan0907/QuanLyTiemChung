@@ -46,7 +46,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" IsReadOnly="True" Width="100"/>
                     <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" IsReadOnly="True" Width="*"/>
                     <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>

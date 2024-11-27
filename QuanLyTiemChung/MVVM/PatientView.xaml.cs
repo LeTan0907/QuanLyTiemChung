@@ -40,6 +40,7 @@ namespace QuanLyTiemChung.MVVM
             }
         }
 
+
         // Event to view patient details
         private void ViewPatientDetails(object sender, RoutedEventArgs e)
         {

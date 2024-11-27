@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -67,15 +68,23 @@ namespace QuanLyTiemChung.MVVM
 
             GhiChuTextBox.Text = _patient.Notes;
 
+            // Set address fields
             if (!string.IsNullOrEmpty(_patient.Address))
             {
                 var addressParts = _patient.Address.Split(',');
 
                 if (addressParts.Length >= 3)
                 {
-                    CityComboBox.SelectedItem = addressParts[0].Trim();
-                    DistrictComboBox.SelectedItem = addressParts[1].Trim();
-                    WardComboBox.SelectedItem = addressParts[2].Trim();
+                    string city = addressParts[0].Trim();
+                    string district = addressParts[1].Trim();
+                    string ward = addressParts[2].Trim();
+
+                    // Set selected city, district, and ward
+                    CityComboBox.SelectedItem = city;
+                    LoadDistrictComboBox(city);
+                    DistrictComboBox.SelectedItem = district;
+                    LoadWardComboBox(district);
+                    WardComboBox.SelectedItem = ward;
                 }
             }
         }
@@ -148,7 +157,10 @@ namespace QuanLyTiemChung.MVVM
             _patient.Notes = GhiChuTextBox.Text;
 
             // Get address from ComboBoxes
-            string address = $"{CityComboBox.SelectedItem}, {DistrictComboBox.SelectedItem}, {WardComboBox.SelectedItem}";
+            string city = CityComboBox.SelectedItem?.ToString() ?? "";
+            string district = DistrictComboBox.SelectedItem?.ToString() ?? "";
+            string ward = WardComboBox.SelectedItem?.ToString() ?? "";
+            string address = $"{city}, {district}, {ward}";
             _patient.Address = address;
 
             try

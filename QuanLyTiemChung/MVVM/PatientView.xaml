@@ -25,17 +25,15 @@
 
         <!-- DataGrid in the second row -->
         <DataGrid x:Name="patientsDataGrid" Grid.Row="1" 
-                  RowStyle="{DynamicResource DataGridRowStyle1}" 
-                  ItemsSource="{Binding Patients}"
-                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
-                  CellStyle="{DynamicResource DataGridCellStyle1}" 
-                  Style="{DynamicResource DataGridStyle1}" 
-                  AutoGenerateColumns="False" 
-                  Background="White" 
-                  Margin="0,10,10,0" 
-                  >
+          RowStyle="{DynamicResource DataGridRowStyle1}" 
+          ItemsSource="{Binding Patients}"
+          ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
+          CellStyle="{DynamicResource DataGridCellStyle1}" 
+          Style="{DynamicResource DataGridStyle1}" 
+          AutoGenerateColumns="False" 
+          Background="White" 
+          Margin="0,10,10,0">
             <DataGrid.Columns>
-                <!-- Example of a data column -->
                 <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="50" Binding="{Binding Number}"/>
                 <DataGridTextColumn Header="CCCD" Binding="{Binding IDNumber}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn Header="Họ tên" IsReadOnly="True" Width="*">
@@ -52,17 +50,17 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" IsReadOnly="True" Width="*"/>
                 <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" IsReadOnly="True" Width="*"/>
-                <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="Auto">
+                <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="*" MinWidth="150">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource gridEditButton}" Click="ViewPatientDetails"  Command="{Binding EditCommand}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                <Button Style="{StaticResource gridEditButton}" Click="ViewPatientDetails" Command="{Binding EditCommand}">
                                     <Icon:PackIconMaterial Kind="Eye" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
-                                <Button Style="{StaticResource gridEditButton}" Click="EditPatient_Click"  Command="{Binding EditCommand}">
+                                <Button Style="{StaticResource gridEditButton}" Click="EditPatient_Click" Command="{Binding EditCommand}">
                                     <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
-                                <Button Margin="5,0,0,0" Style="{StaticResource gridRemoveButton}"  Click="DeletePatient_Click"  Command="{Binding DeleteCommand}">
+                                <Button Margin="5,0,0,0" Style="{StaticResource gridRemoveButton}" Click="DeletePatient_Click" Command="{Binding DeleteCommand}">
                                     <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
                             </StackPanel>
@@ -71,5 +69,6 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
     </Grid>
 </UserControl>
