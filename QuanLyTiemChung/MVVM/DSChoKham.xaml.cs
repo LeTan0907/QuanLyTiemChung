@@ -76,7 +76,7 @@ namespace QuanLyTiemChung.MVVM
                 !string.IsNullOrEmpty(order.Name) && order.Name.ToLower().Contains(searchText)
             ).ToList();
 
-            // Cập nhật lại danh sách FilteredPatients
+            // Cập nhật lại danh sách FilteredOrders
             FilteredPatients.Clear();
             foreach (var order in filteredOrders)
             {

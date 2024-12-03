@@ -32,7 +32,6 @@ namespace QuanLyTiemChung.MVVM
                 string path = AppDomain.CurrentDomain.BaseDirectory + @"\quanlytiemchung-f225a-firebase-adminsdk-ahz93-4982e9abc8.json";
                 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
                 _firestoreDb = FirestoreDb.Create("quanlytiemchung-f225a");
-                MessageBox.Show("Kết nối Firestore thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -41,11 +40,17 @@ namespace QuanLyTiemChung.MVVM
             }
         }
 
-        // Save patient data to Firestore
-        // Save patient data to Firestore
         public async Task SavePatientDataAsync()
         {
             if (!ValidateInputs()) return;
+
+            // Ensure PriorityGroup is not null or empty
+            string priorityGroup = (NhomDoiTuongComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            if (string.IsNullOrEmpty(priorityGroup))
+            {
+                MessageBox.Show("Vui lòng chọn nhóm đối tượng!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             var patient = new Patient
             {
@@ -55,16 +60,30 @@ namespace QuanLyTiemChung.MVVM
                     ? Timestamp.FromDateTime(dob.ToUniversalTime())
                     : Timestamp.GetCurrentTimestamp(), // Ensure UTC
                 Gender = (GioiTinhComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString(),
-                PhoneNumber = DienThoaiTextBox.Text,
+                PhoneNumber = DienThoaiTextBox.Text.Trim(), // Make sure to capture phone number
                 Address = $"{WardComboBox.Text}, {DistrictComboBox.Text}, {CityComboBox.Text}",
-                IDNumber = CCCDTextBox.Text, // Use CCCD as IDNumber
-                PriorityGroup = (NhomDoiTuongComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString(),
+                IDNumber = CCCDTextBox.Text.Trim(), // Capture CCCD
+                PriorityGroup = priorityGroup, // Set priority group value
                 Notes = GhiChuTextBox.Text
             };
 
             try
             {
-                var patientRef = _firestoreDb.Collection("patients").Document(patient.PatientID); 
+                // Check that the phone number and CCCD are captured correctly
+                if (string.IsNullOrEmpty(patient.PhoneNumber))
+                {
+                    MessageBox.Show("Vui lòng nhập số điện thoại!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(patient.IDNumber))
+                {
+                    MessageBox.Show("Vui lòng nhập số CCCD!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Save to Firestore
+                var patientRef = _firestoreDb.Collection("patients").Document(patient.PatientID);
                 await patientRef.SetAsync(patient);
 
                 PatientID = patient.PatientID; // Store the internal PatientID
@@ -75,8 +94,6 @@ namespace QuanLyTiemChung.MVVM
                 MessageBox.Show($"Lỗi khi lưu thông tin bệnh nhân: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
         // Handle registration button click
         private async void DangKi(object sender, RoutedEventArgs e)
         {

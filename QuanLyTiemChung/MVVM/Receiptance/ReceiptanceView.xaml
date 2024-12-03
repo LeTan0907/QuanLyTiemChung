@@ -25,12 +25,7 @@
             </Grid.RowDefinitions>
 
             <!-- Search TextBox and Buttons -->
-            <Grid Width="300" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="0,0,0,63" Grid.Row="0">
-                <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="#B0B9C6" IsHitTestVisible="False"
-                           Panel.ZIndex="1" Text="Search here ..."
-                           Visibility="{Binding Text.Length, Converter={StaticResource BoolToVis}, ElementName=textBoxSearch}" />
-                <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center" Margin="0 0 15 0" Foreground="#B0B9C6" HorizontalAlignment="Right" />
-            </Grid>
+            <Grid Width="300" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="0,0,0,63" Grid.Row="0"/>
 
             <!-- Top Buttons -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0" Grid.Row="0" Grid.Column="1">

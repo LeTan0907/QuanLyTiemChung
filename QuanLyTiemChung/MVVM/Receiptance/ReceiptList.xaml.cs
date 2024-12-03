@@ -117,8 +117,6 @@ namespace QuanLyTiemChung.MVVM.Receiptance
             }
         }
 
-
-
         private void FilterRecords()
         {
             try
@@ -128,31 +126,39 @@ namespace QuanLyTiemChung.MVVM.Receiptance
 
                 if (selectedDate == null)
                 {
-                    // If no date is selected, clear the FilteredPatients
+                    // Nếu không có ngày được chọn, xóa FilteredPatients
                     FilteredPatients.Clear();
                     return;
                 }
 
-                // Filter records by the selected date
+                // Lọc các bản ghi theo ngày đã chọn
                 var filtered = AllMedicalRecords.Where(record =>
                     record.CreatedAt.ToDateTime().Date == selectedDate.Value.Date);
 
                 if (!string.IsNullOrEmpty(nameFilter))
                 {
-                    // Additional filter by name if provided
+                    // Lọc thêm theo tên nếu có
                     filtered = filtered.Where(record =>
                         record.Name.ToLower().Contains(nameFilter));
                 }
 
-                // Clear and add filtered records to FilteredPatients
+                // Xóa và thêm các bản ghi đã lọc vào FilteredPatients
                 FilteredPatients.Clear();
                 foreach (var record in filtered)
                 {
-                    // Modify InvoiceStatus directly
+                    // Sửa trực tiếp trạng thái hóa đơn
                     record.InvoiceStatus = ModifyInvoiceStatus(record.InvoiceStatus);
 
-                    FilteredPatients.Add(record);
+                    FilteredPatients.Add(record); // Thêm bản ghi vào FilteredPatients
                 }
+
+                // Kiểm tra và log các bản ghi đã lọc
+                string log = "Filtered Records:\n";
+                foreach (var record in FilteredPatients)
+                {
+                    log += $"RecordsID: {record.RecordsID}, PatientID: {record.PatientID}, TotalPrice: {record.TotalPrice}\n";
+                }
+                Console.WriteLine(log);
             }
             catch (Exception ex)
             {
@@ -177,7 +183,7 @@ namespace QuanLyTiemChung.MVVM.Receiptance
             }
         }
 
-
+        // Event handlers
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             FilterRecords(); // Filter the records whenever the selected date changes
@@ -187,11 +193,37 @@ namespace QuanLyTiemChung.MVVM.Receiptance
         {
             FilterRecords(); // Filter the records whenever the search text changes
         }
+
+        private void MembersDataGrid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Kiểm tra bản ghi được chọn
+            if (membersDataGrid.SelectedItem is MedicalRecord selectedRecord)
+            {
+                // Tạo và mở cửa sổ PaymentWindow
+                var paymentWindow = new PaymentWindow(selectedRecord);
+                paymentWindow.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một bản ghi để thanh toán.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void OnInteractionButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Lấy thông tin MedicalRecord tương ứng từ dòng DataGrid
+            var button = sender as Button;
+            var selectedRecord = (MedicalRecord)((FrameworkElement)button).DataContext;
+
+            if (selectedRecord == null)
+            {
+                MessageBox.Show("Không thể lấy thông tin hóa đơn.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Mở cửa sổ PaymentWindow
+            var paymentWindow = new PaymentWindow(selectedRecord);
+            paymentWindow.ShowDialog();
+        }
     }
-
-
-
-
-
-    
 }

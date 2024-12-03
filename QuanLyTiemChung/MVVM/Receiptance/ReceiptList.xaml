@@ -11,12 +11,18 @@
         <StackPanel>
             <!-- Search and Filter Section -->
             <StackPanel Orientation="Horizontal" Margin="10">
-                <TextBox x:Name="SearchTextBox" Width="200" Margin="5" Style="{StaticResource searchTextbox}" />
+                <!-- Search Box -->
+                <TextBox x:Name="SearchTextBox" Width="200" Margin="5" Style="{StaticResource searchTextbox}" 
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-                <Button Style="{StaticResource addButton}" Content="Tìm kiếm" Width="100" Margin="5" />
-                <DatePicker x:Name="DatePicker" Width="200" Margin="5" />
+                <!-- Search Button -->
+                <Button Style="{StaticResource addButton}" Content="Tìm kiếm" Width="100" Margin="5" 
+                        Command="{Binding SearchCommand}" />
+
+                <!-- Date Picker -->
+                <DatePicker x:Name="DatePicker" Width="200" Margin="5" SelectedDateChanged="DatePicker_SelectedDateChanged"
+                            />
             </StackPanel>
-
 
             <!-- DataGrid -->
             <DataGrid Grid.Column="0" 
@@ -28,11 +34,13 @@
                       AutoGenerateColumns="False"
                       Background="White"
                       Margin="0,10,10,0"
-                                ItemsSource="{Binding FilteredPatients}">
-
+                      ItemsSource="{Binding FilteredPatients}">
 
                 <DataGrid.Columns>
+                    <!-- Records ID Column -->
                     <DataGridTextColumn Header="Mã " Binding="{Binding RecordsID}" IsReadOnly="True" Width="*"/>
+
+                    <!-- Name Column with Avatar -->
                     <DataGridTemplateColumn Header="Họ tên" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -45,12 +53,19 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+
+                    <!-- Total Price Column -->
                     <DataGridTextColumn Header="Tổng giá" Binding="{Binding TotalPrice}" IsReadOnly="True" Width="*"/>
+
+                    <!-- Invoice Status Column -->
                     <DataGridTextColumn Header="Tình trạng" Binding="{Binding InvoiceStatus}" IsReadOnly="True" Width="*"/>
+
+                    <!-- Interaction Column with Button -->
                     <DataGridTemplateColumn Header="Tương tác" IsReadOnly="True" Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
+                                    <!-- Button with Command Binding -->
                                     <Button Style="{StaticResource gridEditButton}" Command="{Binding EditCommand}">
                                         <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
                                     </Button>

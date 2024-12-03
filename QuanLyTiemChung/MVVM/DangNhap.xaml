@@ -48,8 +48,8 @@
                         </Grid.ColumnDefinitions>
 
                         
-                        <TextBlock x:Name="textEmail"  Text="Email" Style="{StaticResource textHint}" />
-                        <TextBox Name="txtEmail"  Style="{StaticResource textBox}" />
+                        <TextBlock x:Name="T"  Text="Tên đăng nhập" Style="{StaticResource textHint}" />
+                        <TextBox Name="txtUsername"  Style="{StaticResource textBox}" />
                     </Grid>
                 </Border>
 

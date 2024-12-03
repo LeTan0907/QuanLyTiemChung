@@ -155,7 +155,10 @@ namespace QuanLyTiemChung.MVVM
 
             _patient.PhoneNumber = DienThoaiTextBox.Text;
             _patient.IDNumber = CCCDTextBox.Text;
-            _patient.PriorityGroup = NhomDoiTuongComboBox.SelectedItem?.ToString() ?? "";
+
+            // Ensure that the ComboBox item for PriorityGroup is correctly retrieved
+            _patient.PriorityGroup = (NhomDoiTuongComboBox.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "";
+
             _patient.Notes = GhiChuTextBox.Text;
 
             // Ensure that the ComboBox items are selected before using them
@@ -189,6 +192,7 @@ namespace QuanLyTiemChung.MVVM
                 MessageBox.Show($"Lỗi khi cập nhật thông tin bệnh nhân: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
 
         private void Cancel(object sender, RoutedEventArgs e)
